@@ -4,11 +4,20 @@
   "description": "Base Level Extension",
   "version": "1.0",
   "action": {
-    "default_popup": "popup/popup.html",
-    "default_icon": "images/compass.png"
+    "default_icon": {
+      "128": "images/compass.png"
+    }
   },
-  "permissions": ["scripting"],
+  "permissions": ["scripting", "activeTab"],
   "background": {
     "service_worker": "background.js"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+U",
+        "mac": "Command+U"
+      }
+    }
   }
 }
