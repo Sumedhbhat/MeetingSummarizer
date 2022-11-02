@@ -3,6 +3,7 @@ import random
 import string
 import time
 import speech as s
+import directoryDeletion as dd
 
 record = False
 
@@ -13,7 +14,6 @@ def startRecording():
     record = True
     i = 0
     while record == True:
-        #print(id(record), record, "start")
         with mss() as sct:
             name = 'Screenshots/screenshot'
             name += str(i)
@@ -35,13 +35,14 @@ def resumeRecording():
 def stopRecording():
     global record
     record  = False
-    #print(id(record), record, "Stop")
+    
+    #Creating summary
 
+    dd.deleteDir()
+
+    
 
 def recordSpeech():
     while record == True:
         s.rec()
         time.sleep(11)
-    
-
-#startRecording()
