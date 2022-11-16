@@ -36,13 +36,15 @@ def stopRecording():
     global record
     record  = False
     
-    #Creating summary
-
-    dd.deleteDir()
-
-    
 
 def recordSpeech():
     while record == True:
         s.rec()
         time.sleep(11)
+
+
+def createSummary():
+    pass
+
+def deleteDir():
+    dd.deleteDir()
