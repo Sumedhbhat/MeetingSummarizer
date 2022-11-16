@@ -1,32 +1,30 @@
 import os
 
-def checkFileExists():
-    currDir = os.getcwd()
+def check_file_exists():
+    curr_dir = os.getcwd()
     
     
-    audioExist = os.path.exists(currDir + "\Audio")
+    audio_exist = os.path.exists(curr_dir + "\Output\Audio")
     
-    if audioExist == False:
+    if audio_exist == False:
         return False
     
     
-    screenshotsExist = os.path.exists(currDir + "\Screenshots")
+    screenshots_exist = os.path.exists(curr_dir + "\Output\Screenshots")
     
-    if screenshotsExist == False:
+    if screenshots_exist == False:
         return False
     return True
 
-def noOfFiles():
+def no_of_files():
 
     total = 0
-    currDir = os.getcwd()
+    curr_dir = os.getcwd()
     
-    audioDir = currDir + "\Audio"
-    total += len(os.listdir(audioDir))
+    audio_dir = curr_dir + "\Output\Audio"
+    total += len(os.listdir(audio_dir))
 
-    screenshotDir = currDir + "\Screenshots"
-    total += len(os.listdir(screenshotDir))
+    screenshot_dir = curr_dir + "\Output\Screenshots"
+    total += len(os.listdir(screenshot_dir))
 
     return total
-
-    
