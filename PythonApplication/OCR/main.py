@@ -1,19 +1,22 @@
 import pytesseract
 import PIL.Image
 import cv2
+import os
 
+# Default Configuration of the image to text model
 myconfig = r'--psm 1 --oem 3'
 
 
-def image_to_text():
+def image_to_text(image_file_name):
+    image_path = os.path.join(os.curdir, "..", "ScreenShots", image_file_name)
     text = pytesseract.image_to_string(
-        PIL.Image.open('text.jpg'), config=myconfig)
-    print(text)
+        PIL.Image.open(image_path), config=myconfig)
     return text
 
 
-def recognized_boxes_image():
-    img = cv2.imread('someFile.jpg')
+def recognized_image_boxes(image_file_name):
+    image_path = os.path.join(os.curdir, "..", "ScreenShots", image_file_name)
+    img = cv2.imread(image_path)
     height, width, _ = img.shape
     boxes = pytesseract.image_to_boxes(img, config=myconfig)
     for box in boxes:
@@ -25,8 +28,9 @@ def recognized_boxes_image():
     return boxes
 
 
-def recognized_words_outline_with_text():
-    img = cv2.imread('someFile.jpg')
+def recognized_words_outline_with_text(image_file_name):
+    image_path = os.path.join(os.curdir, "..", "ScreenShots", image_file_name)
+    img = cv2.imread(image_path)
     height, width, _ = img.shape
     img_data = pytesseract.image_to_data(
         img, config=myconfig, output_type=Output.DICT)
