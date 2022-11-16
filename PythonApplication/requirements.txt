@@ -1,0 +1,2 @@
+Install whisper model from openAI
+Install FFpmeg for running the model (Maybe only applicable for windows laptops)
