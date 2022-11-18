@@ -1,7 +1,11 @@
 from tkinter import *
 from tkinter import ttk
-import recordingLogic as rec
 from threading import *
+import os
+import sys
+
+sys.path.append(os.getcwd() + "\ApplicationLogic")
+import recordingLogic as rec
 import directoryCheckAndDelete as dc
 import progressBarLogic as pbl
 import fileCheckAndLength as fcl
