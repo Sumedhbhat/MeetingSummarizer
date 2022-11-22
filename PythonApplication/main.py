@@ -61,9 +61,9 @@ def record():
     t1 = Thread(target = rec.start_recording)
     t1.start()
 
-    rec.record_speech()
-    #t2 = Thread(target = rec.record_speech)
-    #t2.start()
+    #rec.record_speech()
+    t2 = Thread(target = rec.record_speech)
+    t2.start()
 
 def stop_record():
 

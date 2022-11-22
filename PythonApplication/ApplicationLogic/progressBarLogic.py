@@ -51,5 +51,5 @@ def extract_data(p_bar, percent, t_files):
             i += 1
             p_bar.update_idletasks()
             
-    print("processed. Final data is: ")
+    print("processed. Final data is: ", data)
             
