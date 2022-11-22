@@ -21,7 +21,7 @@ def start_recording():
             name += '.png'
             sc_file_name = sct.shot(output = name)
         try:
-            time.sleep(10)
+            time.sleep(5)
         except:
             continue
 

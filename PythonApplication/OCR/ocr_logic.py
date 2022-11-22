@@ -5,12 +5,13 @@ import cv2
 myconfig = r'--psm 1 --oem 3'
 
 
-def image_to_text():
+def image_to_text(fileLocation):
     text = pytesseract.image_to_string(
-        PIL.Image.open('text.jpg'), config=myconfig)
-    print(text)
+        PIL.Image.open(fileLocation), config=myconfig)
+    #print(text)
     return text
 
+#image_to_text()
 
 def recognized_boxes_image():
     img = cv2.imread('someFile.jpg')

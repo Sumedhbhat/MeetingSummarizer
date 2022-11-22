@@ -5,6 +5,8 @@ import os
 import sys
 
 sys.path.append(os.getcwd() + "\ApplicationLogic")
+sys.path.append(os.getcwd() + "\OCR")
+
 import recordingLogic as rec
 import directoryCheckAndDelete as dc
 import progressBarLogic as pbl
@@ -59,8 +61,9 @@ def record():
     t1 = Thread(target = rec.start_recording)
     t1.start()
 
-    t2 = Thread(target = rec.record_speech)
-    t2.start()
+    rec.record_speech()
+    #t2 = Thread(target = rec.record_speech)
+    #t2.start()
 
 def stop_record():
 
