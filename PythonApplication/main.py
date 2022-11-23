@@ -1,10 +1,16 @@
+import fileCheckAndLength as fcl
+import progressBarLogic as pbl
+import directoryCheckAndDelete as dc
+import recordingLogic as rec
 from tkinter import *
 from tkinter import ttk
-import recordingLogic as rec
 from threading import *
-import directoryCheck as dc
-import progressBarLogic as pbl
-import fileCheckAndLength as fcl
+import os
+import sys
+
+sys.path.append(os.getcwd() + "\ApplicationLogic")
+sys.path.append(os.getcwd() + "\OCR")
+
 
 # Basic
 root = Tk()
@@ -18,23 +24,23 @@ photo = PhotoImage(file="Images/recording.png")
 root.iconphoto(False, photo)
 
 # background image
-bgImageYellow = PhotoImage(file="Images/yellow.png")
-Label(root, image=bgImageYellow, bg="#fff").place(x=-2, y=35)
+bg_image_yellow = PhotoImage(file="Images/yellow.png")
+Label(root, image=bg_image_yellow, bg="#fff").place(x=-2, y=35)
 
-bgImageBlue = PhotoImage(file="Images/blue.png")
-Label(root, image=bgImageBlue, bg="#fff").place(x=223, y=200)
+bg_image_blue = PhotoImage(file="Images/blue.png")
+Label(root, image=bg_image_blue, bg="#fff").place(x=223, y=200)
 
 # Heading
 hd = Label(root, text="JOTE - Note Summerizer",
            bg="#fff", font="arial 15 bold")
 hd.pack(pady=10)
 
-nameImg = PhotoImage(file="Images/recording.png")
-Label(root, image=nameImg, bd=0).pack(pady=30)
+name_img = PhotoImage(file="Images/recording.png")
+Label(root, image=name_img, bd=0).pack(pady=30)
 
 # Entry
-fileName = StringVar()
-entry = Entry(root, textvariable=fileName, width=18, font="arial 15")
+file_name = StringVar()
+entry = Entry(root, textvariable=file_name, width=18, font="arial 15")
 entry.place(x=100, y=310)
 
 # Threading
@@ -51,15 +57,16 @@ def record():
     resume["state"] = "normal"
     stop["state"] = "normal"
 
-    dc.checkDir()
-    t1 = Thread(target=rec.startRecording)
+    dc.check_dir()
+    t1 = Thread(target=rec.start_recording)
     t1.start()
 
-    t2 = Thread(target=rec.recordSpeech)
+    # rec.record_speech()
+    t2 = Thread(target=rec.record_speech)
     t2.start()
 
 
-def stopRecord():
+def stop_record():
 
     # Disable states
     start["state"] = DISABLED
@@ -69,18 +76,18 @@ def stopRecord():
     resume["state"] = DISABLED
 
     # Stop recording
-    rec.stopRecording()
+    rec.stop_recording()
 
     # Check whether file exists
-    doesFileExists = fcl.checkFileExists()
+    does_file_exists = fcl.check_file_exists()
 
-    if doesFileExists:
-        progressBar()
+    if does_file_exists:
+        progress_bar()
     else:
         print("ERROR")
 
 
-def progressBar():
+def progress_bar():
 
     # Create new window
     progress = Toplevel(root)
@@ -88,18 +95,18 @@ def progressBar():
     progress.geometry("500x100")
 
     # Progress bar
-    pBar = ttk.Progressbar(progress, orient=HORIZONTAL, length=500)
-    pBar.pack(pady=10)
+    p_bar = ttk.Progressbar(progress, orient=HORIZONTAL, length=500)
+    p_bar.pack(pady=10)
 
     percent = StringVar()
 
-    percentLabel = Label(progress, textvariable=percent)
-    percentLabel.pack()
+    percent_label = Label(progress, textvariable=percent)
+    percent_label.pack()
 
-    downloadBtn = Button(
+    download_btn = Button(
         progress, text="Download the summary", state="disabled").pack()
 
-    pbl.progressBarLogic(pBar, percent)
+    pbl.progress_bar_logic(p_bar, percent)
 
     #downloadBtn["state"] = "normal"
 
@@ -108,20 +115,20 @@ def progressBar():
 start = Button(root, text="Start", font="arial 22", bd=0, command=record)
 start.place(x=140, y=230)
 
-pauseBtn = PhotoImage(file="Images/pause.png")
-pause = Button(root, image=pauseBtn, bd=0, bg="#fff",
-               state="disabled", command=rec.pauseRecording)
+pause_btn = PhotoImage(file="Images/pause.png")
+pause = Button(root, image=pause_btn, bd=0, bg="#fff",
+               state="disabled", command=rec.pause_recording)
 pause.place(x=50, y=450)
 
-resumeBtn = PhotoImage(file="Images/resume.png")
-resume = Button(root, image=resumeBtn, bd=0, bg="#fff",
-                state="disabled", command=rec.resumeRecording)
+resume_btn = PhotoImage(file="Images/resume.png")
+resume = Button(root, image=resume_btn, bd=0, bg="#fff",
+                state="disabled", command=rec.resume_recording)
 resume.place(x=150, y=450)
 
-stopBtn = PhotoImage(file="Images/stop.png")
-stop = Button(root, image=stopBtn, bd=0, bg="#fff",
-              state="disabled", command=stopRecord)
+stop_btn = PhotoImage(file="Images/stop.png")
+stop = Button(root, image=stop_btn, bd=0, bg="#fff",
+              state="disabled", command=stop_record)
 stop.place(x=250, y=450)
 
 
-mainloop()
+root.mainloop()

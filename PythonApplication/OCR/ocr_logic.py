@@ -7,11 +7,13 @@ import os
 myconfig = r'--psm 1 --oem 3'
 
 
-def image_to_text(image_file_name):
-    image_path = os.path.join(os.curdir, "..", "ScreenShots", image_file_name)
+def image_to_text(fileLocation):
     text = pytesseract.image_to_string(
-        PIL.Image.open(image_path), config=myconfig)
+        PIL.Image.open(fileLocation), config=myconfig)
+    print(text)
     return text
+
+# image_to_text()
 
 
 def recognized_image_boxes(image_file_name):

@@ -3,48 +3,45 @@ import random
 import string
 import time
 import speech as s
-import directoryDeletion as dd
+import directoryCheckAndDelete as dd
 
 record = False
 
 
     
-def startRecording():
+def start_recording():
     global record
     record = True
     i = 0
     while record == True:
         with mss() as sct:
-            name = 'Screenshots/screenshot'
+            name = 'Output/Screenshots/screenshot'
             name += str(i)
             i += 1
             name += '.png'
-            scFileName = sct.shot(output = name)
+            sc_file_name = sct.shot(output = name)
         try:
-            time.sleep(10)
+            time.sleep(5)
         except:
             continue
 
 
-def pauseRecording():
+def pause_recording():
     pass
 
-def resumeRecording():
+def resume_recording():
     pass
 
-def stopRecording():
+def stop_recording():
     global record
     record  = False
     
 
-def recordSpeech():
+def record_speech():
     while record == True:
         s.rec()
         time.sleep(11)
 
 
-def createSummary():
-    pass
-
-def deleteDir():
-    dd.deleteDir()
+def delete_dir():
+    dd.delete_dir()
