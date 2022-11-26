@@ -1,7 +1,3 @@
-import fileCheckAndLength as fcl
-import progressBarLogic as pbl
-import directoryCheckAndDelete as dc
-import recordingLogic as rec
 from tkinter import *
 from tkinter import ttk
 from threading import *
