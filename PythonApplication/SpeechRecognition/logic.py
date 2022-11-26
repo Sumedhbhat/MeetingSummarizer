@@ -4,12 +4,9 @@ import time
 
 recognizedText = []
 
-
+# Speech Recognition function to convert Speech to Text
 def SpeechRecognition(audioFile, newFile):
     file_path = os.path.join(os.curdir, audioFile) 
-    print(os.path.exists(file_path))
-    print(file_path)
-    print(os.path.exists(file_path))
     model = whisper.load_model("base")
     #try:
     result = model.transcribe(file_path, language='en')
