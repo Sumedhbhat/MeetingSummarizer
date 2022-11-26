@@ -1,0 +1,13 @@
+version: '3'
+services:
+  meeting_summarizer:
+    image: python:3.7
+    build: 
+      context: .
+      dockerfile: dockerfile
+    environment:
+      - DISPLAY=$DISPLAY
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:ro
+      - ./:/app
+    command: python3 main.py
