@@ -3,7 +3,7 @@ from tkinter import ttk
 import fileCheckAndLength as fcl
 import os
 import ocr_logic as ocr
-from threading import *
+from threading import Thread
 
 import speech_to_text_converter as srj
 import image_compare
@@ -14,11 +14,12 @@ def progress_bar_logic(progress, p_bar, percent):
     i = 0
     t_files = fcl.no_of_files()
     update_progress_bar(p_bar, percent, t_files)
+
     files,file_check_values=check_image_similarity(p_bar,percent,t_files)
-    ed = Thread(target = extract_data(p_bar, percent, t_files,files))
+    ed = Thread(target = extract_data(p_bar, percent, len(files)+t_files,files))
     ed.start()
 
-    speechRecog = Thread(target = extract_speech_data(p_bar, percent, t_files,file_check_values))
+    speechRecog = Thread(target = extract_speech_data(p_bar, percent, len(files)+t_files,file_check_values))
     speechRecog.start()
 
     progress.destroy()
@@ -66,16 +67,16 @@ def check_image_similarity(p_bar,percent,t_files):
     for filename in os.listdir(directory):
         f=os.path.join(directory,filename)
         if latest_file=='':
-            latest_file=filename
-            files.append(filename)
+            latest_file=f
+            files.append(f)
             file_check_values.append(False)
         else:
-            finalResult=image_compare.rms_diff(latest_file,filename)
-            latest_file=filename
+            finalResult=image_compare.rms_diff(latest_file,f)
+            latest_file=f
             if finalResult>=80:
-                files.append(filename)
+                files.append(f)
                 file_check_values.append(True)
             else:
-                files[len(files)-1]=filename
+                files[len(files)-1]=f
                 file_check_values.append(False)
     return files,file_check_values
