@@ -9,8 +9,7 @@ def recognize_speech(audioFile, newFile):
     file_path = os.path.join(os.curdir, audioFile) 
     #print(os.path.exists(file_path))
     #print(file_path)
-    #print(os.path.exists(file_path))
-
+    
 # Speech Recognition function to convert Speech to Text
 def SpeechRecognition(audioFile, newFile):
     file_path = os.path.join(os.curdir, audioFile) 

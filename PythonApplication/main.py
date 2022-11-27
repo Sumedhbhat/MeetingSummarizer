@@ -1,3 +1,7 @@
+import fileCheckAndLength as fcl
+import progressBarLogic as pbl
+import directoryCheckAndDelete as dc
+import recordingLogic as rec
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -9,74 +13,71 @@ sys.path.append(os.getcwd() + "\ApplicationLogic")
 sys.path.append(os.getcwd() + "\OCR")
 sys.path.append(os.getcwd() + "\SpeechToTextConverter")
 
-import recordingLogic as rec
-import directoryCheckAndDelete as dc
-import progressBarLogic as pbl
-import fileCheckAndLength as fcl
 
-
-
-#Basic
+# Basic
 root = Tk()
 root.geometry("400x600")
 root.title("JOTE - Note Summarizer")
 root.config(bg="#fff")
 root.resizable(False, False)
 
-#icon
-photo = PhotoImage(file = "Images/recording.png")
+# icon
+photo = PhotoImage(file="Images/recording.png")
 root.iconphoto(False, photo)
 
-#background image
-bg_image_yellow = PhotoImage(file = "Images/yellow.png")
-Label(root, image = bg_image_yellow, bg="#fff").place(x=-2, y=35)
+# background image
+bg_image_yellow = PhotoImage(file="Images/yellow.png")
+Label(root, image=bg_image_yellow, bg="#fff").place(x=-2, y=35)
 
-bg_image_blue = PhotoImage(file = "Images/blue.png")
-Label(root, image = bg_image_blue, bg="#fff").place(x=223, y=200)
+bg_image_blue = PhotoImage(file="Images/blue.png")
+Label(root, image=bg_image_blue, bg="#fff").place(x=223, y=200)
 
-#Heading
-hd = Label(root, text="JOTE - Note Summerizer", bg="#fff", font="arial 15 bold")
+# Heading
+hd = Label(root, text="JOTE - Note Summerizer",
+           bg="#fff", font="arial 15 bold")
 hd.pack(pady=10)
 
 name_img = PhotoImage(file="Images/recording.png")
 Label(root, image=name_img, bd=0).pack(pady=30)
 
-#Entry
+# Entry
 file_name = StringVar()
 entry = Entry(root, textvariable=file_name, width=18, font="arial 15")
 entry.place(x=100, y=310)
 
-#Threading
+# Threading
+
 
 def record():
-    #Start button
+    # Start button
     start["state"] = DISABLED
     start["text"] = "Started"
     start["width"] = 5
 
-    #Pause, resume and stop button
+    # Pause, resume and stop button
     pause["state"] = "normal"
     resume["state"] = "normal"
     stop["state"] = "normal"
-    
+
     dc.check_dir()
-    t1 = Thread(target = rec.start_recording)
+    t1 = Thread(target=rec.start_recording)
     t1.start()
 
-    #rec.record_speech()
-    t2 = Thread(target = rec.record_speech)
+    # rec.record_speech()
+    t2 = Thread(target=rec.record_speech)
     t2.start()
+
 
 def stop_record():
 
-    #Disable states
+    # Disable states
     start["state"] = DISABLED
     start["text"] = "Start"
     stop["state"] = DISABLED
     pause["state"] = DISABLED
     resume["state"] = DISABLED
 
-    #Stop recording
+    # Stop recording
     rec.stop_recording()
     
     #Check whether file exists
@@ -90,14 +91,13 @@ def stop_record():
 
 def progress_bar():
 
-
-    #Create new window
+    # Create new window
     progress = Toplevel(root)
     progress.title("Generating summary...")
     progress.geometry("300x100")
 
-    #Progress bar
-    p_bar = ttk.Progressbar(progress, orient=HORIZONTAL, length=200)
+    # Progress bar
+    p_bar = ttk.Progressbar(progress, orient=HORIZONTAL, length=500)
     p_bar.pack(pady=10)
 
     percent = StringVar()
@@ -114,23 +114,25 @@ def progress_bar():
     
     
 
-#Buttons
+
+# Buttons
 start = Button(root, text="Start", font="arial 22", bd=0, command=record)
 start.place(x=140, y=230)
 
 pause_btn = PhotoImage(file="Images/pause.png")
-pause = Button(root, image=pause_btn, bd=0, bg="#fff", state="disabled", command=rec.pause_recording)
+pause = Button(root, image=pause_btn, bd=0, bg="#fff",
+               state="disabled", command=rec.pause_recording)
 pause.place(x=50, y=450)
 
 resume_btn = PhotoImage(file="Images/resume.png")
-resume = Button(root, image=resume_btn, bd=0, bg="#fff", state="disabled", command=rec.resume_recording)
+resume = Button(root, image=resume_btn, bd=0, bg="#fff",
+                state="disabled", command=rec.resume_recording)
 resume.place(x=150, y=450)
 
 stop_btn = PhotoImage(file="Images/stop.png")
-stop = Button(root, image=stop_btn, bd=0, bg="#fff", state="disabled", command=stop_record)
+stop = Button(root, image=stop_btn, bd=0, bg="#fff",
+              state="disabled", command=stop_record)
 stop.place(x=250, y=450)
-
-
 
 
 root.mainloop()
