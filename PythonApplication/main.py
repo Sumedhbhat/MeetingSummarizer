@@ -1,11 +1,13 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 from threading import *
 import os
 import sys
 
 sys.path.append(os.getcwd() + "\ApplicationLogic")
 sys.path.append(os.getcwd() + "\OCR")
+sys.path.append(os.getcwd() + "\SpeechToTextConverter")
 
 import recordingLogic as rec
 import directoryCheckAndDelete as dc
@@ -76,14 +78,14 @@ def stop_record():
 
     #Stop recording
     rec.stop_recording()
-
+    
     #Check whether file exists
     does_file_exists = fcl.check_file_exists()
 
     if does_file_exists:
         progress_bar()
     else:
-        print("ERROR")
+        messagebox.showerror("File Error", "Something went wrong! Please try again later.")
 
 
 def progress_bar():
@@ -92,10 +94,10 @@ def progress_bar():
     #Create new window
     progress = Toplevel(root)
     progress.title("Generating summary...")
-    progress.geometry("500x100")
+    progress.geometry("300x100")
 
     #Progress bar
-    p_bar = ttk.Progressbar(progress, orient=HORIZONTAL, length=500)
+    p_bar = ttk.Progressbar(progress, orient=HORIZONTAL, length=200)
     p_bar.pack(pady=10)
 
     percent = StringVar()
@@ -103,11 +105,11 @@ def progress_bar():
     percent_label = Label(progress, textvariable=percent)
     percent_label.pack()
 
-    download_btn = Button(progress, text="Download the summary", state="disabled").pack()
+    pbl.progress_bar_logic(progress, p_bar, percent)
 
-    pbl.progress_bar_logic(p_bar, percent)
+    messagebox.showinfo("SUCCESS", "Summary has been generated")
 
-    #downloadBtn["state"] = "normal"
+    start["state"] = "normal"
     
     
     
