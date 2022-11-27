@@ -1,0 +1,7 @@
+PythonApplication/Output/
+PythonApplication/Screenshots/
+PythonApplication/Audio/
+PythonApplication/venv/
+PythonApplication/meetingSummarizer/
+**/.vscode
+**/__pycache__
