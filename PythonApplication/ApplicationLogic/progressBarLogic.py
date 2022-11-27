@@ -5,39 +5,57 @@ import os
 import ocr_logic as ocr
 from threading import *
 
-#print(os.path.join(os.getcwd(), "../"))
-
-def progress_bar_logic(p_bar, percent):
+import speech_to_text_converter as srj
 
 
-    #Check no of files
-    t_files = fcl.no_of_files()
-    
-    for i in range(t_files + 1):
-        p_bar['value'] = ((i/t_files) * 100)
-        percent.set(str(p_bar['value']) + "% completed")
-        p_bar.update_idletasks()
 
+i = -1
 
-def progress_bar_logic(p_bar, percent):
+def progress_bar_logic(progress, p_bar, percent):
     
     
     i = 0
     t_files = fcl.no_of_files()
-    
-    p_bar['value'] = ((i/t_files) * 100)
-    percent.set("0% completed")
-    p_bar.update_idletasks()
+
+    update_progress_bar(p_bar, percent, t_files)
     
     ed = Thread(target = extract_data(p_bar, percent, t_files))
     ed.start()
+
+    speechRecog = Thread(target = extract_speech_data(p_bar, percent, t_files))
+    speechRecog.start()
+
+    progress.destroy()
+
+    return 1
+
+def update_progress_bar(p_bar, percent, t_files):
+    global i
+    i += 1
+    p_bar['value'] = ((i/t_files) * 100)
+    percent.set(str(p_bar['value'])[:5] + "% completed")
+    p_bar.update_idletasks()
+
+    
+def extract_speech_data(p_bar, percent, t_files):
+    speechData = []
+
+    audioDirectory = os.getcwd() + "/Output/Audio"
+    
+    for filename in os.listdir(audioDirectory):
+        f = os.path.join(audioDirectory, filename)
+        if os.path.isfile(f):
+            speechData.append(srj.recognize_speech(f, False))
+            #print("Processed audio: ",i)
+            update_progress_bar(p_bar, percent, t_files)
+            
+    print("Processed. Final speech data is: ", speechData)
     
     
     
 def extract_data(p_bar, percent, t_files):
     data = ""
-    i = 1
-    print("Total no of files are: ", t_files)
+    #print("Total no of files are: ", t_files)
     
     directory = os.getcwd() + "/Output/Screenshots"
     
@@ -45,11 +63,8 @@ def extract_data(p_bar, percent, t_files):
         f = os.path.join(directory, filename)
         if os.path.isfile(f):
             data += ocr.image_to_text(f)
-            print("Processed image: ",i)
-            p_bar['value'] = ((i/t_files) * 100)
-            percent.set(str(p_bar['value'])[:5] + "% completed")
-            i += 1
-            p_bar.update_idletasks()
+            #print("Processed image: ",i)
+            update_progress_bar(p_bar, percent, t_files)
             
-    print("processed. Final data is: ", data)
+    print("Processed. Final OCR data is: ", data)
             

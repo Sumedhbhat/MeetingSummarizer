@@ -19,14 +19,17 @@ def check_file_exists():
 def no_of_files():
 
     total = 0
-    print(os.getcwd())
+    #print(os.getcwd())
     #os.chdir("../")
-    print(os.getcwd())
+    #print(os.getcwd())
     curr_dir = os.getcwd()
     #audio_dir = curr_dir + "\Output\Audio"
     #total += len(os.listdir(audio_dir))
 
     screenshot_dir = curr_dir + "\Output\Screenshots"
     total += len(os.listdir(screenshot_dir))
+
+    audio_dir = curr_dir + "\Output\Audio"
+    total += len(os.listdir(audio_dir))
 
     return total
