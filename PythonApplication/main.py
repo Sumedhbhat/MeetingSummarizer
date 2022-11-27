@@ -1,7 +1,7 @@
-import fileCheckAndLength as fcl
-import progressBarLogic as pbl
-import directoryCheckAndDelete as dc
-import recordingLogic as rec
+from ApplicationLogic import fileCheckAndLength as fcl
+from ApplicationLogic import directoryCheckAndDelete as dc
+from ApplicationLogic import recordingLogic as rec
+from ApplicationLogic import progressBarLogic as pbl
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
