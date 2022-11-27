@@ -1,17 +1,21 @@
-from ApplicationLogic import fileCheckAndLength as fcl
-from ApplicationLogic import directoryCheckAndDelete as dc
-from ApplicationLogic import recordingLogic as rec
-from ApplicationLogic import progressBarLogic as pbl
-from tkinter import *
-from tkinter import ttk
-from tkinter import messagebox
-from threading import *
+
 import os
 import sys
 
 sys.path.append(os.getcwd() + "\ApplicationLogic")
 sys.path.append(os.getcwd() + "\OCR")
 sys.path.append(os.getcwd() + "\SpeechToTextConverter")
+sys.path.append(os.getcwd() + "\ComparisonOfImages")
+from ApplicationLogic import fileCheckAndLength as fcl
+# import fileCheckAndLength as fcl
+import progressBarLogic as pbl
+import directoryCheckAndDelete as dc
+import recordingLogic as rec
+from tkinter import *
+from tkinter import ttk
+from tkinter import messagebox
+from threading import *
+
 
 
 # Basic
