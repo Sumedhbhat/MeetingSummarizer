@@ -6,6 +6,7 @@ import os
 # Default Configuration of the image to text model
 myconfig = r'--psm 1 --oem 3'
 
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 def image_to_text(fileLocation):
     text = pytesseract.image_to_string(
@@ -13,7 +14,10 @@ def image_to_text(fileLocation):
     print(text)
     return text
 
-# image_to_text()
+
+# image_path = os.path.join(os.getcwd(), 'Tests', 'file2.png')
+
+# image_to_text(image_path)
 
 
 def recognized_image_boxes(image_file_name):
