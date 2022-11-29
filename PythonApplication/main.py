@@ -1,6 +1,7 @@
 
 import os
 import sys
+import time
 
 sys.path.append(os.getcwd() + "\ApplicationLogic")
 sys.path.append(os.getcwd() + "\OCR")
@@ -64,6 +65,7 @@ def record():
     stop["state"] = "normal"
 
     dc.check_dir()
+    time.sleep(5)
     t1 = Thread(target=rec.start_recording)
     t1.start()
 
@@ -114,6 +116,8 @@ def progress_bar():
     messagebox.showinfo("SUCCESS", "Summary has been generated")
 
     start["state"] = "normal"
+
+    rec.delete_dir()
     
     
     
