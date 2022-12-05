@@ -12,10 +12,16 @@ def split_sentences(text):
 
 
 def merge_text(text_1, text_2):
-    return [sub[item] for item in range(len(text_2))
+    text = [sub[item] for item in range(len(text_2))
             for sub in [text_1, text_2]]
 
+    res = ''
+    res = res.join(text)
+    print(res)
+    return res
 
+
+merge_text(['a', 'c', 'e'], ['b', 'd', 'f'])
 text1 = """
 Welcome. Let's get started with Lesson 1. Lesson 1's objectives are to ultimately understand first what managerial accounting is, second, why it's important, and third, introduce some contemporary issues related to this topic.
 So first off, what is managerial accounting? Well, it's a very difficult concept to summarize in a single sentence. So in a very unsatisfying book definition is the following: It's the process of obtaining, creating, and analyzing relevant information to help achieve organizational goals. As we work through these slides, we'll delve into the certain -- the specific concepts that are embedded inside this definition. 
@@ -173,4 +179,4 @@ def generate_summary(text):
     return tokenizer.decode(output[0], skip_special_tokens=True)
 """
 
-print(generate_summary_pipeline(text4))
+# print(generate_summary_pipeline(text4))
