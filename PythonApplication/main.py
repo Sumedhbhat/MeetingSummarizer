@@ -7,6 +7,7 @@ sys.path.append(os.getcwd() + "\ApplicationLogic")
 sys.path.append(os.getcwd() + "\OCR")
 sys.path.append(os.getcwd() + "\SpeechToTextConverter")
 sys.path.append(os.getcwd() + "\ComparisonOfImages")
+sys.path.append(os.getcwd() + "\Summarizer")
 
 import fileCheckAndLength as fcl
 import progressBarLogic as pbl
@@ -65,7 +66,6 @@ def record():
     stop["state"] = "normal"
 
     dc.check_dir()
-    time.sleep(5)
     t1 = Thread(target=rec.start_recording)
     t1.start()
 

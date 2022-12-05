@@ -13,6 +13,7 @@ def start_recording():
     global record
     record = True
     i = 0
+    time.sleep(5)
     while record == True:
         with mss() as sct:
             name = 'Output/Screenshots/screenshot'

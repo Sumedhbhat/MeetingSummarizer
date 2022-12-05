@@ -5,13 +5,20 @@ import os
 import ocr_logic as ocr
 from threading import Thread
 import time
+from tkinter import messagebox
 
 import speech_to_text_converter as srj
 import image_compare
+import generateSummary as gs
 
 i = -1
 
+data = []
+speechData = []
+
 def progress_bar_logic(progress, p_bar, percent):
+    global speechData
+    global data
     i = 0
     t_files = fcl.no_of_files()
     update_progress_bar(p_bar, percent, t_files)
@@ -31,7 +38,18 @@ def progress_bar_logic(progress, p_bar, percent):
     end = time.time()
     print("Total time taken for ocr is: ",(end - begin))
 
+    try:
+        finalMergeData = gs.merge_text(speechData, data)
+        finalData = gs.generate_summary_pipeline(finalMergeData)
+
+    except:
+        messagebox.showerror("Length Error", "Something went wrong! Please try again later.")
+        progress.destroy()
+        return None
+
     progress.destroy()
+
+    print("Final data is: ", finalData)
 
     return 1
 
@@ -43,6 +61,7 @@ def update_progress_bar(p_bar, percent, t_files):
     p_bar.update_idletasks()
     
 def extract_speech_data(p_bar, percent, t_files,file_check_values):
+    global speechData
     audioDirectory = os.path.join(os.getcwd() , "Output","Audio")
     files_in_directory=os.listdir(audioDirectory)
     for index,filename in enumerate(files_in_directory):
@@ -52,10 +71,11 @@ def extract_speech_data(p_bar, percent, t_files,file_check_values):
             #print("Processed audio: ",i)
             update_progress_bar(p_bar, percent, t_files)
     speechData=srj.get_final_speech_output()
-    print("Processed. Final speech data is: ", speechData)
+    #print("Type of speech data: ",type(speechData))
+    #print("Processed. Final speech data is: ", speechData)
     
 def extract_data(p_bar, percent, t_files,files):
-    data =[] 
+    global data
     #print("Total no of files are: ", t_files)
     directory = os.path.join(os.getcwd() , "Output","Screenshots")
     for filename in files:
@@ -64,7 +84,8 @@ def extract_data(p_bar, percent, t_files,files):
             data.append(ocr.image_to_text(f))
             #print("Processed image: ",i)
             update_progress_bar(p_bar, percent, t_files)
-    print("Processed. Final OCR data is: ", data)
+    #print("Processed. Final OCR data is: ", data)
+    #print("Type of OCR data: ",type(data))
             
 
 def check_image_similarity(p_bar,percent,t_files):

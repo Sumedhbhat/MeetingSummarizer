@@ -11,7 +11,7 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 def image_to_text(fileLocation):
     text = pytesseract.image_to_string(
         PIL.Image.open(fileLocation), config=myconfig)
-    print(text)
+    #print(text)
     return text
 
 
