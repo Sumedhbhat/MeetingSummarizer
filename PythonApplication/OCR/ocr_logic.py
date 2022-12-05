@@ -17,7 +17,7 @@ def image_to_text(fileLocation):
 
 # image_path = os.path.join(os.getcwd(), 'Tests', 'file2.png')
 
-# image_to_text(image_path)
+#image_to_text("temp.png")
 
 
 def recognized_image_boxes(image_file_name):

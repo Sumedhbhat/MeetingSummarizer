@@ -4,6 +4,7 @@ import fileCheckAndLength as fcl
 import os
 import ocr_logic as ocr
 from threading import Thread
+import time
 
 import speech_to_text_converter as srj
 import image_compare
@@ -15,12 +16,20 @@ def progress_bar_logic(progress, p_bar, percent):
     t_files = fcl.no_of_files()
     update_progress_bar(p_bar, percent, t_files)
 
+    begin = time.time()
+
     files,file_check_values=check_image_similarity(p_bar,percent,t_files)
     ed = Thread(target = extract_data(p_bar, percent, len(files)+t_files,files))
     ed.start()
 
+    end = time.time()
+    print("Total time taken for ocr is: ",(end - begin))
+
+    begin = time.time()
     speechRecog = Thread(target = extract_speech_data(p_bar, percent, len(files)+t_files,file_check_values))
     speechRecog.start()
+    end = time.time()
+    print("Total time taken for ocr is: ",(end - begin))
 
     progress.destroy()
 
