@@ -16,7 +16,10 @@ def rms_diff(im1, im2):
         map(lambda h, i: h*(i**2), h, range(256))
     ) / (float(im1.size[0]) * im1.size[1]))
 #(left,upper,right,lower)
-box = (14,15,754,424)
-cropped_Image = img_1.crop(box)
-cropped_Image_2 = img_2.crop(box)
-rms_diff(cropped_Image,cropped_Image_2)
+try:
+    box = (14,15,754,424)
+    cropped_Image = img_1.crop(box)
+    cropped_Image_2 = img_2.crop(box)
+    rms_diff(cropped_Image,cropped_Image_2)
+except FileNotFoundError:
+    print('Provided image path is not found')
