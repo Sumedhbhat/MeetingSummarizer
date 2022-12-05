@@ -25,5 +25,8 @@ def rms_diff(im1, im2):
         return rms
     except FileNotFoundError:
         print('Provided image path is not found')
+        return 0
+    except:
+        return 0
 
 # print(rms_diff('screenshot3.png','screenshot2.png'))
