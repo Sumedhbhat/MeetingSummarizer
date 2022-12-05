@@ -40,7 +40,7 @@ def stop_recording():
 def record_speech():
     while record == True:
         s.rec()
-        #time.sleep(11)
+        # time.sleep(11)
 
 
 def delete_dir():
