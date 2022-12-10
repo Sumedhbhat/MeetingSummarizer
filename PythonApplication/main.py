@@ -2,10 +2,11 @@
 import os
 import sys
 
-sys.path.append(os.getcwd() + "\ApplicationLogic")
-sys.path.append(os.getcwd() + "\OCR")
-sys.path.append(os.getcwd() + "\SpeechToTextConverter")
-sys.path.append(os.getcwd() + "\ComparisonOfImages")
+sys.path.append(os.path.join(os.getcwd(),'ApplicationLogic'))
+sys.path.append(os.path.join(os.getcwd(),'OCR'))
+sys.path.append(os.path.join(os.getcwd(),'SpeechToTextConverter'))
+sys.path.append(os.path.join(os.getcwd(),'Summarizer'))
+sys.path.append(os.path.join(os.getcwd(),'ComparisonOfImages'))
 
 import fileCheckAndLength as fcl
 import progressBarLogic as pbl
