@@ -4,10 +4,9 @@ import string
 import time
 import speech as s
 import directoryCheckAndDelete as dd
+import os
 
 record = False
-
-
     
 def start_recording():
     global record
@@ -16,16 +15,16 @@ def start_recording():
     time.sleep(5)
     while record == True:
         with mss() as sct:
-            name = 'Output/Screenshots/screenshot'
-            name += str(i)
+            filename='screenshot'
+            filename += str(i)
             i += 1
-            name += '.png'
+            filename += '.png'
+            name = os.path.join('Output','Screenshots',filename)
             sc_file_name = sct.shot(output = name)
         try:
             time.sleep(5)
         except:
             continue
-
 
 def pause_recording():
     pass
