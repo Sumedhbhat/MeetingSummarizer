@@ -21,9 +21,9 @@ def start_recording():
             t = time.localtime()
             current_time = time.strftime("%H:%M:%S", t)
             print(current_time)
-            print(name)
             filename += '.png'
             name = os.path.join('Output','Screenshots',filename)
+            print(name)
             sc_file_name = sct.shot(output = name)
         try:
             time.sleep(10)
