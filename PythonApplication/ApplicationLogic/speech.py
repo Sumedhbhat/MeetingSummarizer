@@ -1,12 +1,14 @@
 import soundcard as sc
 import soundfile as sf
 import time
+import os 
 
 i = 0
 
 def rec():
     global i
-    OUTPUT_FILE_NAME = "Output/Audio/out"+str(i)+".wav"    # file name.
+    filename='out'+str(i)+'.wav'
+    OUTPUT_FILE_NAME = os.path.join('Output','Audio',filename)
     SAMPLE_RATE = 48000              # [Hz]. sampling rate.
     RECORD_SEC = 10              # [sec]. duration recording audio.
 

@@ -54,11 +54,12 @@ def progress_bar_logic(progress, p_bar, percent):
     return 1
 
 def update_progress_bar(p_bar, percent, t_files):
-    global i
-    i += 1
-    p_bar['value'] = ((i/t_files) * 100)
-    percent.set(str(p_bar['value'])[:5] + "% completed")
-    p_bar.update_idletasks()
+    if t_files>0:
+        global i
+        i += 1
+        p_bar['value'] = ((i/t_files) * 100)
+        percent.set(str(p_bar['value'])[:5] + "% completed")
+        p_bar.update_idletasks()
     
 def extract_speech_data(p_bar, percent, t_files,file_check_values):
     global speechData
@@ -93,7 +94,7 @@ def check_image_similarity(p_bar,percent,t_files):
     files=[]
     file_check_values=[]
     latest_file=''
-    directory= os.getcwd()+"/Output/Screenshots"
+    directory= os.path.join(os.getcwd(),"Output","Screenshots")
     
     for filename in os.listdir(directory):
         f=os.path.join(directory,filename)
