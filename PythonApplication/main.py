@@ -64,9 +64,12 @@ def record():
     pause["state"] = "normal"
     resume["state"] = "normal"
     stop["state"] = "normal"
-
+    dc.delete_dir()
     dc.check_dir()
     t1 = Thread(target=rec.start_recording)
+    t = time.localtime()
+    current_time = time.strftime("%H:%M:%S", t)
+    print("start time",current_time)
     t1.start()
 
     # rec.record_speech()

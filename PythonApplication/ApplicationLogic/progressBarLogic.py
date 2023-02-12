@@ -64,15 +64,16 @@ def extract_speech_data(p_bar, percent, t_files,file_check_values):
     global speechData
     audioDirectory = os.path.join(os.getcwd() , "Output","Audio")
     files_in_directory=os.listdir(audioDirectory)
+    file_length=fcl.no_of_files()
     for index,filename in enumerate(files_in_directory):
         f = os.path.join(audioDirectory, filename)
-        if os.path.isfile(f):
+        if os.path.isfile(f) and index<file_length/2:
             srj.recognize_speech(f, file_check_values[index])
             #print("Processed audio: ",i)
             update_progress_bar(p_bar, percent, t_files)
     speechData=srj.get_final_speech_output()
-    #print("Type of speech data: ",type(speechData))
-    #print("Processed. Final speech data is: ", speechData)
+    # print("Type of speech data: ",type(speechData))
+    print("Processed. Final speech data is: ", speechData)
     
 def extract_data(p_bar, percent, t_files,files):
     global data
@@ -84,7 +85,7 @@ def extract_data(p_bar, percent, t_files,files):
             data.append(ocr.image_to_text(f))
             #print("Processed image: ",i)
             update_progress_bar(p_bar, percent, t_files)
-    #print("Processed. Final OCR data is: ", data)
+    print("Processed. Final OCR data is: ", data)
     #print("Type of OCR data: ",type(data))
             
 

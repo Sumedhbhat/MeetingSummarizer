@@ -27,9 +27,16 @@ def no_of_files():
     #total += len(os.listdir(audio_dir))
 
     screenshot_dir = curr_dir + "\Output\Screenshots"
-    total += len(os.listdir(screenshot_dir))
+    screenshot_len = len(os.listdir(screenshot_dir))
 
     audio_dir = curr_dir + "\Output\Audio"
-    total += len(os.listdir(audio_dir))
+    audio_len = len(os.listdir(audio_dir))
+    if screenshot_len==audio_len:
+        print('Exact number')
+    elif screenshot_len+1==audio_len or screenshot_len==audio_len+1:
+        print('one more')
+    else: print('Not working')
+
+    total=2*screenshot_len
 
     return total

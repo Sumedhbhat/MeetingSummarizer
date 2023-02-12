@@ -13,16 +13,20 @@ def start_recording():
     global record
     record = True
     i = 0
-    time.sleep(5)
+    time.sleep(10)
     while record == True:
         with mss() as sct:
             name = 'Output/Screenshots/screenshot'
             name += str(i)
             i += 1
             name += '.png'
+            t = time.localtime()
+            current_time = time.strftime("%H:%M:%S", t)
+            print(current_time)
+            print(name)
             sc_file_name = sct.shot(output = name)
         try:
-            time.sleep(5)
+            time.sleep(10)
         except:
             continue
 
@@ -39,6 +43,7 @@ def stop_recording():
     
 
 def record_speech():
+    time.sleep(10)
     while record == True:
         s.rec()
         # time.sleep(11)
