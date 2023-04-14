@@ -1,12 +1,13 @@
 
 import os
 import sys
+import time
 
-sys.path.append(os.path.join(os.getcwd(),'ApplicationLogic'))
-sys.path.append(os.path.join(os.getcwd(),'OCR'))
-sys.path.append(os.path.join(os.getcwd(),'SpeechToTextConverter'))
-sys.path.append(os.path.join(os.getcwd(),'Summarizer'))
-sys.path.append(os.path.join(os.getcwd(),'ComparisonOfImages'))
+sys.path.append(os.path.join(os.getcwd() , "ApplicationLogic"))
+sys.path.append(os.path.join(os.getcwd() , "OCR"))
+sys.path.append(os.path.join(os.getcwd() , "SpeechToTextConverter"))
+sys.path.append(os.path.join(os.getcwd() , "ComparisonOfImages"))
+sys.path.append(os.path.join(os.getcwd() , "Summarizer"))
 
 import fileCheckAndLength as fcl
 import progressBarLogic as pbl
@@ -31,18 +32,18 @@ photo = PhotoImage(file="Images/recording.png")
 root.iconphoto(False, photo)
 
 # background image
-bg_image_yellow = PhotoImage(file="Images/yellow.png")
+bg_image_yellow = PhotoImage(file=os.path.join("Images","yellow.png"))
 Label(root, image=bg_image_yellow, bg="#fff").place(x=-2, y=35)
 
-bg_image_blue = PhotoImage(file="Images/blue.png")
+bg_image_blue = PhotoImage(file=os.path.join("Images","blue.png"))
 Label(root, image=bg_image_blue, bg="#fff").place(x=223, y=200)
 
 # Heading
-hd = Label(root, text="JOTE - Note Summerizer",
+hd = Label(root, text="JOTE - Note Summarizer",
            bg="#fff", font="arial 15 bold")
 hd.pack(pady=10)
 
-name_img = PhotoImage(file="Images/recording.png")
+name_img = PhotoImage(file=os.path.join("Images","recording.png"))
 Label(root, image=name_img, bd=0).pack(pady=30)
 
 # Entry
@@ -63,9 +64,12 @@ def record():
     pause["state"] = "normal"
     resume["state"] = "normal"
     stop["state"] = "normal"
-
+    dc.delete_dir()
     dc.check_dir()
     t1 = Thread(target=rec.start_recording)
+    t = time.localtime()
+    current_time = time.strftime("%H:%M:%S", t)
+    print("start time",current_time)
     t1.start()
 
     # rec.record_speech()
@@ -115,6 +119,8 @@ def progress_bar():
     messagebox.showinfo("SUCCESS", "Summary has been generated")
 
     start["state"] = "normal"
+
+    rec.delete_dir()
     
     
     
@@ -124,17 +130,17 @@ def progress_bar():
 start = Button(root, text="Start", font="arial 22", bd=0, command=record)
 start.place(x=140, y=230)
 
-pause_btn = PhotoImage(file="Images/pause.png")
+pause_btn = PhotoImage(file=os.path.join("Images","pause.png"))
 pause = Button(root, image=pause_btn, bd=0, bg="#fff",
                state="disabled", command=rec.pause_recording)
 pause.place(x=50, y=450)
 
-resume_btn = PhotoImage(file="Images/resume.png")
+resume_btn = PhotoImage(file=os.path.join("Images","resume.png"))
 resume = Button(root, image=resume_btn, bd=0, bg="#fff",
                 state="disabled", command=rec.resume_recording)
 resume.place(x=150, y=450)
 
-stop_btn = PhotoImage(file="Images/stop.png")
+stop_btn = PhotoImage(file=os.path.join("Images","stop.png"))
 stop = Button(root, image=stop_btn, bd=0, bg="#fff",
               state="disabled", command=stop_record)
 stop.place(x=250, y=450)

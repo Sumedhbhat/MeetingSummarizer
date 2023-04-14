@@ -12,12 +12,12 @@ def split_sentences(text):
 
 
 def merge_text(text_1, text_2):
-    text = [sub[item] for item in range(len(text_2))
-            for sub in [text_1, text_2]]
-
+    #text = [sub[item] for item in range(len(text_2))
+            #for sub in [text_1, text_2]]
+    text = text_1 + text_2
     res = ''
     res = res.join(text)
-    print(res)
+    #print(res)
     return res
 
 

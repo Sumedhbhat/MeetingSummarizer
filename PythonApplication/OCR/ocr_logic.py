@@ -11,13 +11,13 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 def image_to_text(fileLocation):
     text = pytesseract.image_to_string(
         PIL.Image.open(fileLocation), config=myconfig)
-    print(text)
+    #print(text)
     return text
 
 
 # image_path = os.path.join(os.getcwd(), 'Tests', 'file2.png')
 
-# image_to_text(image_path)
+#image_to_text("temp.png")
 
 
 def recognized_image_boxes(image_file_name):
