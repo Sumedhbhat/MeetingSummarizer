@@ -75,6 +75,7 @@ def extract_speech_data(p_bar, percent, t_files,file_check_values):
     speechData=srj.get_final_speech_output()
     # print("Type of speech data: ",type(speechData))
     print("Processed. Final speech data is: ", speechData)
+    print("Length of the data is ", len( speechData ))
     
 def extract_data(p_bar, percent, t_files,files):
     global data
@@ -87,7 +88,7 @@ def extract_data(p_bar, percent, t_files,files):
             #print("Processed image: ",i)
             update_progress_bar(p_bar, percent, t_files)
     print("Processed. Final OCR data is: ", data)
-    #print("Type of OCR data: ",type(data))
+    print("Length of the data is ", len( data ))
             
 
 def check_image_similarity(p_bar,percent,t_files):
