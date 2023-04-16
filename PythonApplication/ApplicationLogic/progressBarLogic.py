@@ -40,18 +40,22 @@ def progress_bar_logic(progress, p_bar, percent):
 
     try:
         finalMergeData = gs.merge_text(speechData, data)
+        '''print("--------------------------Final data ----------------------------- ")
+        print(finalMergeData)
+        print(len(finalMergeData))
+        print("--------------------------------------------------------------------")'''
         finalData = gs.generate_summary_pipeline(finalMergeData)
 
     except:
         messagebox.showerror("Length Error", "Something went wrong! Please try again later.")
         progress.destroy()
-        return None
+        return -1
 
     progress.destroy()
 
-    print("Final data is: ", finalData)
+    print("Final summarized data is: ", finalData)
 
-    return 1
+    return finalData
 
 def update_progress_bar(p_bar, percent, t_files):
     if t_files>0:
@@ -75,7 +79,7 @@ def extract_speech_data(p_bar, percent, t_files,file_check_values):
     speechData=srj.get_final_speech_output()
     # print("Type of speech data: ",type(speechData))
     print("Processed. Final speech data is: ", speechData)
-    print("Length of the data is ", len( speechData ))
+    #print("Length of the data is ", len( speechData ))
     
 def extract_data(p_bar, percent, t_files,files):
     global data
@@ -88,7 +92,7 @@ def extract_data(p_bar, percent, t_files,files):
             #print("Processed image: ",i)
             update_progress_bar(p_bar, percent, t_files)
     print("Processed. Final OCR data is: ", data)
-    print("Length of the data is ", len( data ))
+    #print("Length of the data is ", len( data ))
             
 
 def check_image_similarity(p_bar,percent,t_files):
