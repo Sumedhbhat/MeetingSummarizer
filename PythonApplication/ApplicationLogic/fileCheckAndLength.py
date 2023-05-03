@@ -28,8 +28,7 @@ def no_of_files():
         print('Exact number')
     elif screenshot_len+1==audio_len or screenshot_len==audio_len+1:
         print('one more')
-    else:
-        print('Different length')
+    else: print('Not working')
 
     total=2*screenshot_len
 
