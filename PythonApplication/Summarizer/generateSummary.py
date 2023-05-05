@@ -193,4 +193,17 @@ def generate_summary_gpt(text):
     return summary
 
 
-# print(generate_summary_pipeline(text4))
+def generate_title(text):
+    title = ""
+    prompt = f"Generate a title for this text : {text}"
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "user", "content": prompt},
+        ],
+    )
+    title = response["choices"][0]["message"]["content"]
+    return title
+
+
+print(generate_title(text4))
