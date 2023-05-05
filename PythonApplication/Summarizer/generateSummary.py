@@ -1,6 +1,12 @@
 from transformers import pipeline, BartTokenizerFast, EncoderDecoderModel
 import torch
 from nltk import tokenize
+import openai
+
+# Insert your OpenAI API Key here
+
+OPENAI_API_KEY = "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"
+openai.api_key = OPENAI_API_KEY
 
 # Function to split the paragraph into sentences
 
@@ -12,16 +18,12 @@ def split_sentences(text):
 
 
 def merge_text(text_1, text_2):
-    #text = [sub[item] for item in range(len(text_2))
-            #for sub in [text_1, text_2]]
     text = text_1 + text_2
     res = ''
     res = res.join(text)
-    #print(res)
     return res
 
 
-# merge_text(['a', 'c', 'e'], ['b', 'd', 'f'])
 text1 = """
 Welcome. Let's get started with Lesson 1. Lesson 1's objectives are to ultimately understand first what managerial accounting is, second, why it's important, and third, introduce some contemporary issues related to this topic.
 So first off, what is managerial accounting? Well, it's a very difficult concept to summarize in a single sentence. So in a very unsatisfying book definition is the following: It's the process of obtaining, creating, and analyzing relevant information to help achieve organizational goals. As we work through these slides, we'll delve into the certain -- the specific concepts that are embedded inside this definition. 
@@ -165,18 +167,43 @@ def generate_summary_pipeline(text):
     return summary[0]['summary_text']
 
 
-"""
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-#tokenizer = BartTokenizerFast.from_pretrained('knkarthick/MEETING_SUMMARY')
-#model = EncoderDecoderModel.from_pretrained('knkarthick/MEETING_SUMMARY')
-def generate_summary(text):
-    inputs = tokenizer([text], padding='max_length',
-                       truncation=True, max_length=400, return_tensors='pt')
-    input_ids = inputs.input_ids.to(device)
-    attention_mask = inputs.attention_mask.to(device)
+def generate_summary_generative(text):
+    summary = ""
+    prompt = f"Summarize this : {text}"
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=prompt,
+        temperature=1,
+        max_tokens=2000,
+    )
+    summary = response["choices"][0]["text"]
+    return summary
 
-    output = model.generate(input_ids, attention_mask=attention_mask)
-    return tokenizer.decode(output[0], skip_special_tokens=True)
-"""
 
-# print(generate_summary_pipeline(text4))
+def generate_summary_gpt(text):
+    summary = ""
+    prompt = f"Summarize this : {text}"
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "user", "content": prompt},
+        ],
+    )
+    summary = response["choices"][0]["message"]["content"]
+    return summary
+
+
+def generate_title(text):
+    title = ""
+    prompt = f"Generate a title for this text : {text}"
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "user", "content": prompt},
+        ],
+    )
+    title = response["choices"][0]["message"]["content"]
+    return title
+
+
+print(generate_title(text4))
