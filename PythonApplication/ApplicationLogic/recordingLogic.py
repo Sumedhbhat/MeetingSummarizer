@@ -4,37 +4,84 @@ import string
 import time
 import speech as s
 import directoryCheckAndDelete as dd
+import snippingTool as st
 import os
+from threading import *
+from tkinter import *
 
-record = False
+record = True
+r_a = 0
+r_v = 0
+audio_num = 0
+video_num = 0
+snip_response = True
     
-def start_recording():
-    global record
+def init_recording(record_audio, record_video, s_r):
+
+    global r_a, r_v, audio_num, video_num, record, snip_response
     record = True
-    i = 0
-    time.sleep(10)
+    r_a = record_audio
+    r_v = record_video
+    audio_num = 0
+    video_num = 0
+    snip_response = s_r
+
+    if record_video == 1:
+        record_video_thread = Thread(target=start_recording)
+        record_video_thread.start()
+
+    if record_audio == 1:
+        record_audio_thread = Thread(target=record_speech)
+        record_audio_thread.start()
+
+def start_recording():
+    global record, video_num
+
     while record == True:
-        with mss() as sct:
-            filename='screenshot'
-            filename += str(i)
-            i += 1
-            t = time.localtime()
-            current_time = time.strftime("%H:%M:%S", t)
-            print(current_time)
-            filename += '.png'
-            name = os.path.join('Output','Screenshots',filename)
-            print(name)
-            sc_file_name = sct.shot(output = name)
+        if snip_response == False:
+            st.calculate_dimension(video_num)
+            video_num += 1
+        else:
+            with mss() as sct:
+                filename='screenshot'
+                filename += str(video_num)
+                video_num += 1
+                t = time.localtime()
+                current_time = time.strftime("%H:%M:%S", t)
+                print(current_time)
+                filename += '.png'
+                name = os.path.join('Output','Screenshots',filename)
+                print(name)
+                sc_file_name = sct.shot(output = name)
         try:
             time.sleep(10)
         except:
             continue
 
-def pause_recording():
-    pass
+def pause_recording(stop, resume, pause):
+    pause["state"] = DISABLED
+    resume["state"] = "normal"
+    stop["state"] = DISABLED
 
-def resume_recording():
-    pass
+    global record
+    record = False
+
+def resume_recording(stop, resume, pause):
+    resume["state"] = DISABLED
+    stop["state"] = "normal"
+    pause["state"] = "normal"
+
+    global record, r_a, r_v
+    record = True
+
+    if r_v == 1:
+        record_video_thread = Thread(target=start_recording)
+        record_video_thread.start()
+
+    if r_a == 1:
+        record_audio_thread = Thread(target=record_speech)
+        record_audio_thread.start()
+    
 
 def stop_recording():
     global record
@@ -42,10 +89,11 @@ def stop_recording():
     
 
 def record_speech():
-    time.sleep(10)
+
+    global record, audio_num
     while record == True:
-        s.rec()
-        # time.sleep(11)
+        s.rec(audio_num)
+        audio_num += 1
 
 
 def delete_dir():

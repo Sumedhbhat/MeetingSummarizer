@@ -13,9 +13,9 @@ def rms_diff(im1, im2):
     try:
         image_file1=Image.open(im1)
         image_file2=Image.open(im2)
-        box = (14,15,754,424)
-        cropped_Image_1 = image_file1.crop(box)
-        cropped_Image_2 = image_file2.crop(box)
+        #box = (14,15,754,424)
+        #cropped_Image_1 = image_file1.crop(box)
+        #cropped_Image_2 = image_file2.crop(box)
         h = ImageChops.difference(image_file1, image_file2).histogram()
 
         # calculate rms

@@ -14,6 +14,7 @@ import fileCheckAndLength as fcl
 import progressBarLogic as pbl
 import directoryCheckAndDelete as dc
 import recordingLogic as rec
+import snippingTool as st
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -22,8 +23,60 @@ from fpdf import FPDF
 from datetime import datetime
 from pathlib import Path
 
+def check_before_start(record_audio, record_video, ask_user_window):
+    global root
+    if record_audio == 0 and record_video == 0:
+        pass
+    elif record_video == 0 and record_audio == 1:
+        ask_user_window.destroy()
+        record(record_audio, record_video, True)
+    elif record_video == 1:
+        ask_user_window.destroy()
 
-def record():
+        snip_response = messagebox.askyesno("SELECT", "Do you want to record your full screen?")
+        if snip_response == False:
+            snip_window = Tk()
+            st.main_logic(snip_window)
+
+            try:
+                while snip_window.state() == 'normal':
+                    messagebox.showinfo("INFO!", "Please click the OK button once you have selected the recording area")
+        
+            except:
+                pass
+            
+        record(record_audio, record_video, snip_response)
+
+def ask_user():
+
+    start["state"] = DISABLED
+    start["text"] = "Started"
+    start["width"] = 5
+
+    record_screen = IntVar()
+    record_audio = IntVar()
+
+    ask_user_window = Toplevel(root)
+    ask_user_window.geometry("220x145")
+    ask_user_window.title("SELECT")
+    ask_user_window_photo = PhotoImage(file="Images/choice.png")
+    ask_user_window.iconphoto(False, ask_user_window_photo)
+    ask_user_window.resizable(False, False)
+
+    ask_user_text = Label(ask_user_window, text="What do you want to record?")
+    ask_user_text_1 = Label(ask_user_window, text="You need to select one or more options")
+    video_checkbox = Checkbutton(ask_user_window, text="Meeting screen", variable=record_screen, onvalue=1, offvalue=0)
+    audio_checkbox = Checkbutton(ask_user_window, text="Audio", variable=record_audio, onvalue=1, offvalue=0)
+    ok_button = Button(ask_user_window, text="OK", width=25, command=lambda : check_before_start(record_audio.get(), record_screen.get(), ask_user_window))
+
+    ask_user_text.grid(row=0, column=0, sticky=W, pady=2)
+    ask_user_text_1.grid(row=1, column=0, sticky=W, pady=2)
+    video_checkbox.grid(row=2, column=0, sticky=W, pady=2)
+    audio_checkbox.grid(row=3, column=0, sticky=W, pady=2)
+    ok_button.grid(row=4, column=0)
+
+def record(record_audio, record_video, snip_response):
+    global root
     # Start button
     start["state"] = DISABLED
     start["text"] = "Started"
@@ -31,19 +84,20 @@ def record():
 
     # Pause, resume and stop button
     pause["state"] = "normal"
-    resume["state"] = "normal"
+    resume["state"] = DISABLED
     stop["state"] = "normal"
     dc.delete_dir()
     dc.check_dir()
-    t1 = Thread(target=rec.start_recording)
+
     t = time.localtime()
     current_time = time.strftime("%H:%M:%S", t)
     print("start time",current_time)
-    t1.start()
 
-    # rec.record_speech()
-    t2 = Thread(target=rec.record_speech)
-    t2.start()
+    print("Audio : {}, Video : {}".format(record_audio, record_video))
+
+    rec.init_recording(record_audio, record_video, snip_response)
+
+    root.iconify()
 
 
 def stop_record():
@@ -172,28 +226,26 @@ def main_logic():
     Label(root, image=name_img, bd=0).pack(pady=30)
 
     # Entry
-    file_name = StringVar()
-    entry = Entry(root, textvariable=file_name, width=18, font="arial 15")
-    entry.place(x=100, y=310)
+    #entry = Entry(root, textvariable=file_name, width=18, font="arial 15")
 
     # Threading
 
 
     # Buttons
     global start 
-    start = Button(root, text="Start", font="arial 22", bd=0, command=record)
+    start = Button(root, text="Start", font="arial 22", bd=0, command=ask_user)
     start.place(x=140, y=230)
 
     pause_btn = PhotoImage(file=os.path.join("Images","pause.png"))
     global pause 
     pause = Button(root, image=pause_btn, bd=0, bg="#fff",
-                state="disabled", command=rec.pause_recording)
+                state="disabled", command=lambda : rec.pause_recording(stop, resume, pause))
     pause.place(x=50, y=450)
 
     resume_btn = PhotoImage(file=os.path.join("Images","resume.png"))
     global resume 
     resume = Button(root, image=resume_btn, bd=0, bg="#fff",
-                    state="disabled", command=rec.resume_recording)
+                    state="disabled", command=lambda:rec.resume_recording(stop, resume, pause))
     resume.place(x=150, y=450)
 
     stop_btn = PhotoImage(file=os.path.join("Images","stop.png"))

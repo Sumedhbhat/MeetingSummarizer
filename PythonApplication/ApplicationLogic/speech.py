@@ -3,11 +3,8 @@ import soundfile as sf
 import time
 import os 
 
-i = 0
-
-def rec():
-    global i
-    filename='out'+str(i)+'.wav'
+def rec(audio_num):
+    filename='out'+str(audio_num)+'.wav'
     OUTPUT_FILE_NAME = os.path.join('Output','Audio',filename)
     SAMPLE_RATE = 48000              # [Hz]. sampling rate.
     RECORD_SEC = 10              # [sec]. duration recording audio.
@@ -22,4 +19,3 @@ def rec():
         print(OUTPUT_FILE_NAME)
         # change "data=data[:, 0]" to "data=data", if you would like to write audio as multiple-channels.
         sf.write(file=OUTPUT_FILE_NAME, data=data[:, 0], samplerate=SAMPLE_RATE)
-    i += 1
