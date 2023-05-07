@@ -18,8 +18,10 @@ speechData = []
 
 def progress_bar_logic(progress, p_bar, percent):
     global speechData
-    global data
+    global data, i
     i = 0
+    data = []
+    speechData = []
     t_files = fcl.no_of_files()
     update_progress_bar(p_bar, percent, t_files)
 
