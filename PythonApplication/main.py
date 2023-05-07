@@ -35,8 +35,16 @@ def check_before_start(record_audio, record_video, ask_user_window):
 
         snip_response = messagebox.askyesno("SELECT", "Do you want to record your full screen?")
         if snip_response == False:
-            st.main_logic()
-            messagebox.showinfo("INFO!", "Please click the OK button once you have selected the recording area")
+            snip_window = Tk()
+            st.main_logic(snip_window)
+
+            try:
+                while snip_window.state() == 'normal':
+                    messagebox.showinfo("INFO!", "Please click the OK button once you have selected the recording area")
+        
+            except:
+                pass
+            
         record(record_audio, record_video, snip_response)
 
 def ask_user():

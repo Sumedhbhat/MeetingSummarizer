@@ -1,9 +1,13 @@
 from tkinter import *
 import pyautogui
 import os
-import time
+import gc
 
 start_x, start_y, current_x, current_y = 0, 0, 0, 0
+
+def destroy_snip():
+    snip_window = None
+    gc.collect()
 
 def take_bounded_screenshot(x1, y1, x2, y2, video_num):
     print("Capturing image")
@@ -91,7 +95,8 @@ class Application():
     def exit_snip_mode(self):
         self.snip_surface.destroy()
         self.master_screen.withdraw()
-        snip_window.destroy()
+        #snip_window.destroy()
+        destroy_snip()
 
     def on_button_press(self, event):
         # save mouse drag start position
@@ -113,9 +118,9 @@ class Application():
 snip_window = None
 app = None
 
-def main_logic():
+def main_logic(s_w):
     global snip_window, app
-    snip_window = Tk()
+    snip_window = s_w
     app = Application(snip_window)
-    #return None
-    #snip_window.mainloop()
+    return None
+    snip_window.mainloop()
