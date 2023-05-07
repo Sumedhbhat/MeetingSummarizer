@@ -2,6 +2,11 @@ import soundcard as sc
 import soundfile as sf
 import time
 import os 
+from recordingLogic import files_processed
+from threading import Thread
+import speech_to_text_converter as srj
+
+audio_data=[]
 
 def rec(audio_num):
     filename='out'+str(audio_num)+'.wav'
@@ -17,5 +22,23 @@ def rec(audio_num):
         current_time = time.strftime("%H:%M:%S", t)
         print(current_time)
         print(OUTPUT_FILE_NAME)
+        current_time = time.strftime("%H:%M:%S", t)
+        print(current_time)
+        print(OUTPUT_FILE_NAME)
+        directory= os.path.join(os.getcwd(),"Output","Audio")
+        print(directory)
+        print(os.listdir(directory))
+        Thread(target=gen_speech_data,args=(i,OUTPUT_FILE_NAME,)).start()
         # change "data=data[:, 0]" to "data=data", if you would like to write audio as multiple-channels.
         sf.write(file=OUTPUT_FILE_NAME, data=data[:, 0], samplerate=SAMPLE_RATE)
+
+def gen_speech_data(index,filename):
+    global files_processed
+    filepath = os.path.join(os.getcwd(),'Output','Audio',filename)
+    result=srj.speech_convertor(filepath)
+    while len(audio_data)-1<index:
+        audio_data.append('')
+    print("Audio Data result")
+    audio_data[index]=result
+    files_processed+=1
+    print(audio_data)
