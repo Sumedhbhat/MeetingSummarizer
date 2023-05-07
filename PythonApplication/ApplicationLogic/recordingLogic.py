@@ -4,6 +4,7 @@ import string
 import time
 import speech as s
 import directoryCheckAndDelete as dd
+import snippingTool as st
 import os
 from threading import *
 from tkinter import *
@@ -13,15 +14,17 @@ r_a = 0
 r_v = 0
 audio_num = 0
 video_num = 0
+snip_response = True
     
-def init_recording(record_audio, record_video):
+def init_recording(record_audio, record_video, s_r):
 
-    global r_a, r_v, audio_num, video_num, record
+    global r_a, r_v, audio_num, video_num, record, snip_response
     record = True
     r_a = record_audio
     r_v = record_video
     audio_num = 0
     video_num = 0
+    snip_response = s_r
 
     if record_video == 1:
         record_video_thread = Thread(target=start_recording)
@@ -35,17 +38,21 @@ def start_recording():
     global record, video_num
 
     while record == True:
-        with mss() as sct:
-            filename='screenshot'
-            filename += str(video_num)
+        if snip_response == False:
+            st.calculate_dimension(video_num)
             video_num += 1
-            t = time.localtime()
-            current_time = time.strftime("%H:%M:%S", t)
-            print(current_time)
-            filename += '.png'
-            name = os.path.join('Output','Screenshots',filename)
-            print(name)
-            sc_file_name = sct.shot(output = name)
+        else:
+            with mss() as sct:
+                filename='screenshot'
+                filename += str(video_num)
+                video_num += 1
+                t = time.localtime()
+                current_time = time.strftime("%H:%M:%S", t)
+                print(current_time)
+                filename += '.png'
+                name = os.path.join('Output','Screenshots',filename)
+                print(name)
+                sc_file_name = sct.shot(output = name)
         try:
             time.sleep(10)
         except:

@@ -14,6 +14,7 @@ import fileCheckAndLength as fcl
 import progressBarLogic as pbl
 import directoryCheckAndDelete as dc
 import recordingLogic as rec
+import snippingTool as st
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
@@ -23,11 +24,20 @@ from datetime import datetime
 from pathlib import Path
 
 def check_before_start(record_audio, record_video, ask_user_window):
+    global root
     if record_audio == 0 and record_video == 0:
         pass
-    else:
+    elif record_video == 0 and record_audio == 1:
         ask_user_window.destroy()
-        record(record_audio, record_video)
+        record(record_audio, record_video, True)
+    elif record_video == 1:
+        ask_user_window.destroy()
+
+        snip_response = messagebox.askyesno("SELECT", "Do you want to record your full screen?")
+        if snip_response == False:
+            st.main_logic()
+            messagebox.showinfo("INFO!", "Please click the OK button once you have selected the recording area")
+        record(record_audio, record_video, snip_response)
 
 def ask_user():
 
@@ -57,7 +67,7 @@ def ask_user():
     audio_checkbox.grid(row=3, column=0, sticky=W, pady=2)
     ok_button.grid(row=4, column=0)
 
-def record(record_audio, record_video):
+def record(record_audio, record_video, snip_response):
 
     # Start button
     start["state"] = DISABLED
@@ -77,7 +87,7 @@ def record(record_audio, record_video):
 
     print("Audio : {}, Video : {}".format(record_audio, record_video))
 
-    rec.init_recording(record_audio, record_video)
+    rec.init_recording(record_audio, record_video, snip_response)
 
 
 def stop_record():
