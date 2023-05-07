@@ -68,7 +68,7 @@ def ask_user():
     ok_button.grid(row=4, column=0)
 
 def record(record_audio, record_video, snip_response):
-
+    global root
     # Start button
     start["state"] = DISABLED
     start["text"] = "Started"
@@ -88,6 +88,8 @@ def record(record_audio, record_video, snip_response):
     print("Audio : {}, Video : {}".format(record_audio, record_video))
 
     rec.init_recording(record_audio, record_video, snip_response)
+
+    root.iconify()
 
 
 def stop_record():
