@@ -23,19 +23,17 @@ from fpdf import FPDF
 from datetime import datetime
 from pathlib import Path
 
-def check_before_start(record_audio, record_video, ask_user_window):
+def check_before_start(record_audio, record_video):
     global root
     if record_audio == 0 and record_video == 0:
         pass
     elif record_video == 0 and record_audio == 1:
-        ask_user_window.destroy()
         record(record_audio, record_video, True)
     elif record_video == 1:
-        ask_user_window.destroy()
 
         snip_response = messagebox.askyesno("SELECT", "Do you want to record your full screen?")
         if snip_response == False:
-            snip_window = Tk()
+            snip_window = Toplevel(root)
             st.main_logic(snip_window)
 
             try:
@@ -56,24 +54,25 @@ def ask_user():
     record_screen = IntVar()
     record_audio = IntVar()
 
-    ask_user_window = Toplevel(root)
-    ask_user_window.geometry("220x145")
-    ask_user_window.title("SELECT")
-    ask_user_window_photo = PhotoImage(file="Images/choice.png")
-    ask_user_window.iconphoto(False, ask_user_window_photo)
-    ask_user_window.resizable(False, False)
+    audio_response = messagebox.askyesno("REQUIRED", "Do you want to record the meeting audio?")
+    video_response = messagebox.askyesno("REQUIRED", "Do you want to record the meeting screen?")
 
-    ask_user_text = Label(ask_user_window, text="What do you want to record?")
-    ask_user_text_1 = Label(ask_user_window, text="You need to select one or more options")
-    video_checkbox = Checkbutton(ask_user_window, text="Meeting screen", variable=record_screen, onvalue=1, offvalue=0)
-    audio_checkbox = Checkbutton(ask_user_window, text="Audio", variable=record_audio, onvalue=1, offvalue=0)
-    ok_button = Button(ask_user_window, text="OK", width=25, command=lambda : check_before_start(record_audio.get(), record_screen.get(), ask_user_window))
+    while audio_response == False and video_response == False:
+        messagebox.showwarning("NEEDED!", "JOTE can't work without audio and video. Either audio or video or both are needed.")
+        audio_response = messagebox.askyesno("REQUIRED", "Do you want to record the meeting audio?")
+        video_response = messagebox.askyesno("REQUIRED", "Do you want to record the meeting screen?")
 
-    ask_user_text.grid(row=0, column=0, sticky=W, pady=2)
-    ask_user_text_1.grid(row=1, column=0, sticky=W, pady=2)
-    video_checkbox.grid(row=2, column=0, sticky=W, pady=2)
-    audio_checkbox.grid(row=3, column=0, sticky=W, pady=2)
-    ok_button.grid(row=4, column=0)
+    if audio_response == True:
+        record_audio = 1
+    else:
+        record_audio = 0
+
+    if video_response == True:
+        record_screen = 1
+    else:
+        record_screen = 0
+
+    check_before_start(record_audio, record_screen)
 
 def record(record_audio, record_video, snip_response):
     global root
@@ -256,10 +255,13 @@ def main_logic():
 
     root.protocol('WM_DELETE_WINDOW', gar_collector)
 
-    root.mainloop()
+    disclaimer_message = "To generate the summary, system audio will be recorded and screenshots of your meeting will be taken frequently. However, once you click the start button, you can select whether to record audio, video or not. All the recorded audio and screenshots are stored locally in your system. Once the summary is generated, JOTE deletes all of these recordings and screenshots."
 
-    
+    messagebox.showwarning("DISCLAIMER", disclaimer_message)
+
+    root.mainloop()
 
 
 main_thread = Thread(target=main_logic)
 main_thread.start()
+
