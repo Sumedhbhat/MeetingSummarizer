@@ -23,6 +23,8 @@ from fpdf import FPDF
 from datetime import datetime
 from pathlib import Path
 
+os.environ["REPLICATE_API_TOKEN"]="r8_KRiUuszTneQSbmmAaISbUvHeUDYCZrL3bIiJh"
+
 def check_before_start(record_audio, record_video, ask_user_window):
     global root
     if record_audio == 0 and record_video == 0:

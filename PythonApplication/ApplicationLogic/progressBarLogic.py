@@ -6,6 +6,7 @@ import ocr_logic as ocr
 from threading import Thread
 import time
 from tkinter import messagebox
+import recordingLogic as rl
 from recordingLogic import files_processed,similarity_values,image_data
 from speech import audio_data
 
@@ -23,7 +24,7 @@ def progress_bar_logic(progress, p_bar, percent):
     global data, i
     i = 0
     data = []
-    speechData = []
+    speechData = ['']
     t_files = fcl.no_of_files()
     update_progress_bar(p_bar, percent, t_files)
 
@@ -42,11 +43,17 @@ def progress_bar_logic(progress, p_bar, percent):
     audio_directory = os.path.join(os.getcwd() , "Output","Audio")
     image_directory = os.path.join(os.getcwd() , "Output","Screenshots")
     total_files=len(os.listdir(audio_directory))+len(os.listdir(image_directory))
+    print(similarity_values)
+    print(image_data)
+
     while True:
-        if files_processed<=total_files:
+        update_progress_bar(p_bar,percent,t_files)
+        print(rl.files_processed,total_files)
+        if rl.files_processed>=total_files:
+            print("---------------------------------------Broke free of the loop------------------------------------------------------")
             break
     last_index=0
-    for index,value in similarity_values:
+    for index,value in enumerate(similarity_values):
         speechData[last_index]+=audio_data[index]
         if value==1:
             data.append(image_data[index])
@@ -77,8 +84,7 @@ def progress_bar_logic(progress, p_bar, percent):
 
 def update_progress_bar(p_bar, percent, t_files):
     if t_files>0:
-        global files_processed 
-        p_bar['value'] = ((files_processed/t_files) * 100)
+        p_bar['value'] = ((rl.files_processed/t_files) * 100)
         percent.set(str(p_bar['value'])[:5] + "% completed")
         p_bar.update_idletasks()
     

@@ -14,7 +14,7 @@ def recognize_speech(audioFile, newFile):
         recognized_text.append(result['text'])
     else:
         recognized_text[len(recognized_text)-1] += result['text']
-    return result['text']
+    return result['transcription']
     #print(os.path.exists(file_path))
     #print(file_path)
     #print(os.path.exists(file_path))
@@ -25,7 +25,7 @@ def speech_convertor(audio_file):
     input={"audio": open(audio_file, "rb")}
     )
     print(output)
-    return output['text']
+    return output['transcription']
 
 def get_final_speech_output():
     return recognized_text

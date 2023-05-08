@@ -19,7 +19,7 @@ video_num = 0
 snip_response = True
 similarity_values=[]
 image_data=[]
-files_processed=0
+files_processed = 0
     
 def init_recording(record_audio, record_video, s_r):
 
@@ -58,8 +58,8 @@ def start_recording():
                 name = os.path.join('Output','Screenshots',filename)
                 print(name)
                 sc_file_name = sct.shot(output = name)
-                image_arr=Thread(target=gen_image_array(video_num-1,filename))
-                image_t=Thread(target=gen_image_text_array(video_num-1,filename))
+                Thread(target=gen_image_array(video_num-1,filename)).start()
+                Thread(target=gen_image_text_array(video_num-1,filename)).start()
         try:
             time.sleep(10)
         except:
@@ -130,4 +130,5 @@ def gen_image_text_array(index,filename):
     while len(image_data)-1<index:
         image_data.append('')
     image_data[index]=ocr.image_to_text(filepath)
+    print(files_processed)
     files_processed += 1
