@@ -18,6 +18,7 @@ def split_sentences(text):
 
 
 def merge_text(text_1, text_2):
+    print("In merger data")
     text = text_1 + text_2
     res = ''
     res = res.join(text)
@@ -181,6 +182,7 @@ def generate_summary_generative(text):
 
 
 def generate_summary_gpt(text):
+    print("have entered gpt")
     summary = ""
     prompt = f"Summarize this : {text}"
     response = openai.ChatCompletion.create(

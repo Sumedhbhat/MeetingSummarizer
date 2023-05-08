@@ -25,8 +25,11 @@ from pathlib import Path
 
 os.environ["REPLICATE_API_TOKEN"]="r8_KRiUuszTneQSbmmAaISbUvHeUDYCZrL3bIiJh"
 
+recording_audio=0
+recording_video=0
+
 def check_before_start(record_audio, record_video, ask_user_window):
-    global root
+    global root,recording_audio,recording_video
     if record_audio == 0 and record_video == 0:
         pass
     elif record_video == 0 and record_audio == 1:
@@ -35,6 +38,8 @@ def check_before_start(record_audio, record_video, ask_user_window):
     elif record_video == 1:
         ask_user_window.destroy()
 
+        recording_video=record_video
+        recording_audio=record_audio
         snip_response = messagebox.askyesno("SELECT", "Do you want to record your full screen?")
         if snip_response == False:
             snip_window = Tk()

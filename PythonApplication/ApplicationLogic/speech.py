@@ -4,7 +4,7 @@ import time
 import os 
 from threading import Thread
 import speech_to_text_converter as srj
-import recordingLogic
+import recordingLogic as rl
 
 audio_data=[]
 
@@ -20,14 +20,11 @@ def rec(audio_num):
 
         t = time.localtime()
         current_time = time.strftime("%H:%M:%S", t)
-        print(current_time)
-        print(OUTPUT_FILE_NAME)
-        current_time = time.strftime("%H:%M:%S", t)
-        print(current_time)
-        print(OUTPUT_FILE_NAME)
+        #print(current_time)
+        #print(OUTPUT_FILE_NAME)
         directory= os.path.join(os.getcwd(),"Output","Audio")
-        print(directory)
-        print(os.listdir(directory))
+        #print(directory)
+        #print(os.listdir(directory))
         # change "data=data[:, 0]" to "data=data", if you would like to write audio as multiple-channels.
         sf.write(file=OUTPUT_FILE_NAME, data=data[:, 0], samplerate=SAMPLE_RATE)
         Thread(target=gen_speech_data,args=(audio_num,OUTPUT_FILE_NAME,)).start()
@@ -37,7 +34,7 @@ def gen_speech_data(index,filename):
     result=srj.speech_convertor(filepath)
     while len(audio_data)-1<index:
         audio_data.append('')
-    print("Audio Data result")
+    #print("Audio Data result")
     audio_data[index]=result
-    recordingLogic.files_processed+=1
-    print(audio_data)
+    rl.files_processed+=1
+    #print(audio_data)

@@ -24,7 +24,8 @@ def speech_convertor(audio_file):
     "openai/whisper:e39e354773466b955265e969568deb7da217804d8e771ea8c9cd0cef6591f8bc",
     input={"audio": open(audio_file, "rb")}
     )
-    print(output)
+    print(output['transcription'])
+    print(audio_file)
     return output['transcription']
 
 def get_final_speech_output():

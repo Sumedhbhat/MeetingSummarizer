@@ -44,8 +44,10 @@ def start_recording():
 
     while record == True:
         if snip_response == False:
-            st.calculate_dimension(video_num)
+            filename=st.calculate_dimension(video_num)
             video_num += 1
+            Thread(target=gen_image_array(video_num-1,filename)).start()
+            Thread(target=gen_image_text_array(video_num-1,filename)).start()
         else:
             with mss() as sct:
                 filename='screenshot'
@@ -58,8 +60,8 @@ def start_recording():
                 name = os.path.join('Output','Screenshots',filename)
                 print(name)
                 sc_file_name = sct.shot(output = name)
-                Thread(target=gen_image_array(video_num-1,filename)).start()
-                Thread(target=gen_image_text_array(video_num-1,filename)).start()
+                Thread(target=gen_image_array(video_num-1,name)).start()
+                Thread(target=gen_image_text_array(video_num-1,name)).start()
         try:
             time.sleep(10)
         except:
@@ -111,8 +113,9 @@ def gen_image_array(index,filename):
         similarity_values.append(1)
         return
     directory= os.path.join(os.getcwd(),"Output","Screenshots")
-    new_file = os.path.join(os.getcwd(),'Output','Screenshots',filename)
-
+    print(filename)
+    new_file= os.path.join(os.getcwd(),filename)
+    print(new_file)
     com_filename='screenshot'
     com_filename+=str(index-1)
     com_filename+='.png'
@@ -126,9 +129,12 @@ def gen_image_array(index,filename):
 def gen_image_text_array(index,filename):
     global files_processed
     directory= os.path.join(os.getcwd(),"Output","Screenshots")
-    filepath = os.path.join('Output','Screenshots',filename)
+    print(filename)
+    filepath= os.path.join(os.getcwd(),filename)
+    print(filepath)
     while len(image_data)-1<index:
         image_data.append('')
     image_data[index]=ocr.image_to_text(filepath)
     print(files_processed)
+    print(filename)
     files_processed += 1

@@ -9,6 +9,7 @@ from tkinter import messagebox
 import recordingLogic as rl
 from recordingLogic import files_processed,similarity_values,image_data
 from speech import audio_data
+from main import recording_audio, recording_video
 
 import speech_to_text_converter as srj
 import image_compare
@@ -43,33 +44,41 @@ def progress_bar_logic(progress, p_bar, percent):
     audio_directory = os.path.join(os.getcwd() , "Output","Audio")
     image_directory = os.path.join(os.getcwd() , "Output","Screenshots")
     total_files=len(os.listdir(audio_directory))+len(os.listdir(image_directory))
-    print(similarity_values)
-    print(image_data)
+    #print(similarity_values)
+    #print(image_data)
 
     while True:
-        update_progress_bar(p_bar,percent,t_files)
+        update_progress_bar(p_bar,percent,total_files+1)
         print(rl.files_processed,total_files)
         if rl.files_processed>=total_files:
             print("---------------------------------------Broke free of the loop------------------------------------------------------")
             break
     last_index=0
     for index,value in enumerate(similarity_values):
-        speechData[last_index]+=audio_data[index]
+        if recording_audio==True:
+            speechData[last_index]+=audio_data[index]
         if value==1:
             data.append(image_data[index])
             last_index+=1
-            speechData.append('')
+            if recording_audio==True:
+                speechData.append('')
+    if len(similarity_values)<len(audio_data) and recording_audio==True:
+        audio_index=len(similarity_values)
+        while audio_index!=len(similarity_values):
+            speechData[len(speechData)-1]+=audio_data[audio_index]
+            audio_index+=1
     speechData.pop()
     end = time.time()
-    print("Total time taken for ocr is: ",(end - begin))
+    #print("Total time taken for ocr is: ",(end - begin))
 
     try:
         finalMergeData = gs.merge_text(speechData, data)
+        print("Final Merge data got")
         '''print("--------------------------Final data ----------------------------- ")
         print(finalMergeData)
         print(len(finalMergeData))
         print("--------------------------------------------------------------------")'''
-        finalData = gs.generate_summary_pipeline(finalMergeData)
+        finalData = gs.generate_summary_gpt(finalMergeData)
 
     except:
         messagebox.showerror("Length Error", "Something went wrong! Please try again later.")
@@ -79,7 +88,6 @@ def progress_bar_logic(progress, p_bar, percent):
     progress.destroy()
 
     print("Final summarized data is: ", finalData)
-
     return finalData
 
 def update_progress_bar(p_bar, percent, t_files):
