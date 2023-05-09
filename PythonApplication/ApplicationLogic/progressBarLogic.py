@@ -6,6 +6,10 @@ import ocr_logic as ocr
 from threading import Thread
 import time
 from tkinter import messagebox
+import recordingLogic as rl
+from recordingLogic import files_processed,similarity_values,image_data
+from speech import audio_data
+from main import recording_audio, recording_video
 
 import speech_to_text_converter as srj
 import image_compare
@@ -21,32 +25,60 @@ def progress_bar_logic(progress, p_bar, percent):
     global data, i
     i = 0
     data = []
-    speechData = []
+    speechData = ['']
     t_files = fcl.no_of_files()
     update_progress_bar(p_bar, percent, t_files)
 
     begin = time.time()
 
-    files,file_check_values=check_image_similarity(p_bar,percent,t_files)
-    ed = Thread(target = extract_data(p_bar, percent, len(files)+t_files,files))
-    ed.start()
+    #files,file_check_values=check_image_similarity(p_bar,percent,t_files)
+    #ed = Thread(target = extract_data(p_bar, percent, len(files)+t_files,files))
+    #ed.start()
 
     end = time.time()
-    print("Total time taken for ocr is: ",(end - begin))
+    #print("Total time taken for ocr is: ",(end - begin))
 
     begin = time.time()
-    speechRecog = Thread(target = extract_speech_data(p_bar, percent, len(files)+t_files,file_check_values))
-    speechRecog.start()
+    #speechRecog = Thread(target = extract_speech_data(p_bar, percent, len(files)+t_files,file_check_values))
+    #speechRecog.start()
+    audio_directory = os.path.join(os.getcwd() , "Output","Audio")
+    image_directory = os.path.join(os.getcwd() , "Output","Screenshots")
+    total_files=len(os.listdir(audio_directory))+len(os.listdir(image_directory))
+    #print(similarity_values)
+    #print(image_data)
+
+    while True:
+        update_progress_bar(p_bar,percent,total_files+1)
+        print(rl.files_processed,total_files)
+        if rl.files_processed>=total_files:
+            print("---------------------------------------Broke free of the loop------------------------------------------------------")
+            break
+    last_index=0
+    for index,value in enumerate(similarity_values):
+        if recording_audio==True:
+            speechData[last_index]+=audio_data[index]
+        if value==1:
+            data.append(image_data[index])
+            last_index+=1
+            if recording_audio==True:
+                speechData.append('')
+    if len(similarity_values)<len(audio_data) and recording_audio==True:
+        audio_index=len(similarity_values)
+        while audio_index!=len(similarity_values):
+            speechData[len(speechData)-1]+=audio_data[audio_index]
+            audio_index+=1
+    speechData.pop()
     end = time.time()
-    print("Total time taken for ocr is: ",(end - begin))
+    #print("Total time taken for ocr is: ",(end - begin))
 
     try:
         finalMergeData = gs.merge_text(speechData, data)
+        print("Final Merge data got")
         '''print("--------------------------Final data ----------------------------- ")
         print(finalMergeData)
         print(len(finalMergeData))
         print("--------------------------------------------------------------------")'''
-        finalData = gs.generate_summary_pipeline(finalMergeData)
+        finalData = gs.generate_summary_gpt(finalMergeData)
 
     except:
         messagebox.showerror("Length Error", "Something went wrong! Please try again later.")
@@ -56,14 +88,11 @@ def progress_bar_logic(progress, p_bar, percent):
     progress.destroy()
 
     print("Final summarized data is: ", finalData)
-
     return finalData
 
 def update_progress_bar(p_bar, percent, t_files):
     if t_files>0:
-        global i
-        i += 1
-        p_bar['value'] = ((i/t_files) * 100)
+        p_bar['value'] = ((rl.files_processed/t_files) * 100)
         percent.set(str(p_bar['value'])[:5] + "% completed")
         p_bar.update_idletasks()
     

@@ -8,6 +8,8 @@ import snippingTool as st
 import os
 from threading import *
 from tkinter import *
+import ocr_logic as ocr
+import image_compare
 
 record = True
 r_a = 0
@@ -15,6 +17,9 @@ r_v = 0
 audio_num = 0
 video_num = 0
 snip_response = True
+similarity_values=[]
+image_data=[]
+files_processed = 0
     
 def init_recording(record_audio, record_video, s_r):
 
@@ -39,8 +44,10 @@ def start_recording():
 
     while record == True:
         if snip_response == False:
-            st.calculate_dimension(video_num)
+            filename=st.calculate_dimension(video_num)
             video_num += 1
+            Thread(target=gen_image_array(video_num-1,filename)).start()
+            Thread(target=gen_image_text_array(video_num-1,filename)).start()
         else:
             with mss() as sct:
                 filename='screenshot'
@@ -53,6 +60,8 @@ def start_recording():
                 name = os.path.join('Output','Screenshots',filename)
                 print(name)
                 sc_file_name = sct.shot(output = name)
+                Thread(target=gen_image_array(video_num-1,name)).start()
+                Thread(target=gen_image_text_array(video_num-1,name)).start()
         try:
             time.sleep(10)
         except:
@@ -98,3 +107,34 @@ def record_speech():
 
 def delete_dir():
     dd.delete_dir()
+
+def gen_image_array(index,filename):
+    if index==0:
+        similarity_values.append(1)
+        return
+    directory= os.path.join(os.getcwd(),"Output","Screenshots")
+    print(filename)
+    new_file= os.path.join(os.getcwd(),filename)
+    print(new_file)
+    com_filename='screenshot'
+    com_filename+=str(index-1)
+    com_filename+='.png'
+
+    comparing_file = os.path.join(os.getcwd(),'Output','Screenshots',com_filename)
+    compare_value=image_compare.rms_diff(new_file,comparing_file)
+    similarity_values.append(1)
+    if compare_value<80:
+        similarity_values[index-1]=0
+
+def gen_image_text_array(index,filename):
+    global files_processed
+    directory= os.path.join(os.getcwd(),"Output","Screenshots")
+    print(filename)
+    filepath= os.path.join(os.getcwd(),filename)
+    print(filepath)
+    while len(image_data)-1<index:
+        image_data.append('')
+    image_data[index]=ocr.image_to_text(filepath)
+    print(files_processed)
+    print(filename)
+    files_processed += 1
