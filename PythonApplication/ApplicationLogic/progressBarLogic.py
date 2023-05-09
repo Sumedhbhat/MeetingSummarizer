@@ -70,6 +70,9 @@ def progress_bar_logic(progress, p_bar, percent):
     speechData.pop()
     end = time.time()
     #print("Total time taken for ocr is: ",(end - begin))
+    print("Processed. Final speech data is: ", speechData)
+    print("Processed. Final OCR data is: ", data)
+    print("similarity values ", similarity_values)
 
     try:
         finalMergeData = gs.merge_text(speechData, data)
