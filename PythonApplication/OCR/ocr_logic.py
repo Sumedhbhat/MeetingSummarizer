@@ -2,6 +2,10 @@ import pytesseract
 import PIL.Image
 import cv2
 import os
+import nltk
+import re
+#nltk.download()
+#words = set(nltk.corpus.words.words())
 
 # Default Configuration of the image to text model
 myconfig = r'--psm 1 --oem 3'
@@ -11,6 +15,12 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 def image_to_text(fileLocation):
     text = pytesseract.image_to_string(
         PIL.Image.open(fileLocation), config=myconfig)
+    text.replace("\n"," ")
+    ''' 
+    " ".join(w for w in nltk.wordpunct_tokenize(text) \
+         if w.lower() in words or not w.isalpha())
+    '''
+    text="".join(re.findall("[a-zA-Z0-9&@$%*!?/.,':;\"\s]",text))
     #print(text)
     return text
 
