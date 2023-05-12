@@ -22,26 +22,30 @@ from threading import *
 from fpdf import FPDF
 from datetime import datetime
 from pathlib import Path
+import pywinctl as pwc
+from pywinauto import application
+import pygetwindow
 
 os.environ["REPLICATE_API_TOKEN"]="r8_KRiUuszTneQSbmmAaISbUvHeUDYCZrL3bIiJh"
 
 recording_audio=0
 recording_video=0
 
-def check_before_start(record_audio, record_video, ask_user_window):
-    global root,recording_audio,recording_video
-    if record_audio == 0 and record_video == 0:
-        pass
-    elif record_video == 0 and record_audio == 1:
-        ask_user_window.destroy()
-        record(record_audio, record_video, True)
-    elif record_video == 1:
-        ask_user_window.destroy()
 
-        recording_video=record_video
-        recording_audio=record_audio
-        snip_response = messagebox.askyesno("SELECT", "Do you want to record your full screen?")
+def maximize(window_chosen, options, window_selector,record_audio, record_video, snip_response):
+    if window_chosen.get() not in options:
+        pass
+    else:
+        global root
+        app_name = window_chosen.get()
+        app = application.Application().connect(title=app_name)
+        main_window = app.top_window()
+        main_window.minimize()
+        main_window.maximize()
+        window_selector.destroy()
+
         if snip_response == False:
+
             snip_window = Tk()
             st.main_logic(snip_window)
 
@@ -51,43 +55,93 @@ def check_before_start(record_audio, record_video, ask_user_window):
         
             except:
                 pass
-            
+        
         record(record_audio, record_video, snip_response)
+
+def select_window_to_record(record_audio, record_video, snip_response):
+    global root
+    window_selector = Toplevel(root)
+    window_selector.geometry("350x100")
+    window_selector.title("Select window")
+    window_selector.resizable(False, False)
+
+    allow_label = Label(window_selector, text="Choose which screen or window to record")
+    allow_label.place(x=0,y=0)
+
+    options = list(pwc.getAllTitles())
+
+    window_chosen = StringVar()
+    window_chosen.set("Select window or screen")
+    
+    window_dropdown = OptionMenu(window_selector, window_chosen , *options )
+    window_dropdown.place(x=10,y=30)
+
+    window_button = Button(window_selector, text="OK", command=lambda: maximize(window_chosen, options, window_selector, record_audio, record_video, snip_response))
+    window_button.place(x=300,y=70) 
+
+
+
+def check_before_start(record_audio, record_video):
+    global root,recording_audio,recording_video
+    swtr_res = False
+    recording_video=record_video
+    recording_audio=record_audio
+    if record_audio == 0 and record_video == 0:
+        pass
+    elif record_video == 0 and record_audio == 1:
+        record(record_audio, record_video, True)
+    elif record_video == 1:
+
+        snip_response = messagebox.askyesno("SELECT", "Do you want to record your full screen?")
+
+        select_window_to_record(record_audio, record_video, snip_response)
 
 def ask_user():
 
     start["state"] = DISABLED
     start["text"] = "Started"
-    start["width"] = 5
+    start["width"] = 6
 
     record_screen = IntVar()
     record_audio = IntVar()
 
-    ask_user_window = Toplevel(root)
-    ask_user_window.geometry("220x145")
-    ask_user_window.title("SELECT")
-    ask_user_window_photo = PhotoImage(file="Images/choice.png")
-    ask_user_window.iconphoto(False, ask_user_window_photo)
-    ask_user_window.resizable(False, False)
+    audio_response = messagebox.askyesno("REQUIRED", "Do you want to record the meeting audio?")
+    video_response = messagebox.askyesno("REQUIRED", "Do you want to record the meeting screen?")
 
-    ask_user_text = Label(ask_user_window, text="What do you want to record?")
-    ask_user_text_1 = Label(ask_user_window, text="You need to select one or more options")
-    video_checkbox = Checkbutton(ask_user_window, text="Meeting screen", variable=record_screen, onvalue=1, offvalue=0)
-    audio_checkbox = Checkbutton(ask_user_window, text="Audio", variable=record_audio, onvalue=1, offvalue=0)
-    ok_button = Button(ask_user_window, text="OK", width=25, command=lambda : check_before_start(record_audio.get(), record_screen.get(), ask_user_window))
+    while audio_response == False and video_response == False:
+        messagebox.showwarning("NEEDED!", "JOTE can't work without audio and video. Either audio or video or both are needed.")
+        audio_response = messagebox.askyesno("REQUIRED", "Do you want to record the meeting audio?")
+        video_response = messagebox.askyesno("REQUIRED", "Do you want to record the meeting screen?")
 
-    ask_user_text.grid(row=0, column=0, sticky=W, pady=2)
-    ask_user_text_1.grid(row=1, column=0, sticky=W, pady=2)
-    video_checkbox.grid(row=2, column=0, sticky=W, pady=2)
-    audio_checkbox.grid(row=3, column=0, sticky=W, pady=2)
-    ok_button.grid(row=4, column=0)
+    if audio_response == True:
+        record_audio = 1
+    else:
+        record_audio = 0
+
+    if video_response == True:
+        record_screen = 1
+    else:
+        record_screen = 0
+
+    check_before_start(record_audio, record_screen)
+
+def show_disclaimer():
+    disclaimer_message = "To generate the summary, system audio will be recorded and screenshots of your meeting will be taken frequently. However, once you click the start button, you can select whether to record audio, video or not. All the recorded audio and screenshots are stored locally in your system. Once the summary is generated, JOTE deletes all of these recordings and screenshots."
+
+    response = messagebox.askokcancel("DISCLAIMER", disclaimer_message)
+
+    if response == True:
+        ask_user()
+    else:
+        gar_collector()
 
 def record(record_audio, record_video, snip_response):
-    global root
+    global root, start
     # Start button
     start["state"] = DISABLED
     start["text"] = "Started"
-    start["width"] = 5
+    start["width"] = 6
+    start.place(x=140,y=70)
 
     # Pause, resume and stop button
     pause["state"] = "normal"
@@ -111,7 +165,9 @@ def stop_record():
 
     # Disable states
     start["state"] = DISABLED
-    start["text"] = "Start"
+    start["text"] = "Processing"
+    start.place(x=120,y=70)
+    start["width"] = 9
     stop["state"] = DISABLED
     pause["state"] = DISABLED
     resume["state"] = DISABLED
@@ -194,9 +250,12 @@ def progress_bar():
         loc = write_to_file(rtnValue)
         os.startfile(loc)
         messagebox.showinfo("SUCCESS", "Summary has been generated. \nLocation - "+loc)
-    start["state"] = "normal"
 
     rec.delete_dir()
+    start["state"] = "normal"
+    start["text"] = "Start"
+    start.place(x=150, y=70)
+    start["width"] = 5
     
 def gar_collector():
     root = None
@@ -208,9 +267,9 @@ def main_logic():
     # Basic
     global root
     root = Tk()
-    root.geometry("400x600")
+    root.geometry("400x250")
     root.title("JOTE - Note Summarizer")
-    root.config(bg="#fff")
+    root.config(bg="white")
     root.resizable(False, False)
 
     # icon
@@ -218,19 +277,19 @@ def main_logic():
     root.iconphoto(False, photo)
 
     # background image
-    bg_image_yellow = PhotoImage(file=os.path.join("Images","yellow.png"))
-    Label(root, image=bg_image_yellow, bg="#fff").place(x=-2, y=35)
+    #bg_image_yellow = PhotoImage(file=os.path.join("Images","yellow.png"))
+    #Label(root, image=bg_image_yellow, bg="#fff").place(x=-2, y=35)
 
-    bg_image_blue = PhotoImage(file=os.path.join("Images","blue.png"))
-    Label(root, image=bg_image_blue, bg="#fff").place(x=223, y=200)
+    #bg_image_blue = PhotoImage(file=os.path.join("Images","blue.png"))
+    #Label(root, image=bg_image_blue, bg="#fff").place(x=223, y=200)
 
     # Heading
     hd = Label(root, text="JOTE - Note Summarizer",
             bg="#fff", font="arial 15 bold")
     hd.pack(pady=10)
 
-    name_img = PhotoImage(file=os.path.join("Images","recording.png"))
-    Label(root, image=name_img, bd=0).pack(pady=30)
+    #name_img = PhotoImage(file=os.path.join("Images","recording.png"))
+    #Label(root, image=name_img, bd=0).pack(pady=30)
 
     # Entry
     #entry = Entry(root, textvariable=file_name, width=18, font="arial 15")
@@ -240,33 +299,34 @@ def main_logic():
 
     # Buttons
     global start 
-    start = Button(root, text="Start", font="arial 22", bd=0, command=ask_user)
-    start.place(x=140, y=230)
+    start = Button(root, text="Start", font="arial 22", bd=0, command=show_disclaimer)
+    start.place(x=150, y=70)
 
     pause_btn = PhotoImage(file=os.path.join("Images","pause.png"))
     global pause 
     pause = Button(root, image=pause_btn, bd=0, bg="#fff",
                 state="disabled", command=lambda : rec.pause_recording(stop, resume, pause))
-    pause.place(x=50, y=450)
+    pause.place(x=50, y=150)
 
     resume_btn = PhotoImage(file=os.path.join("Images","resume.png"))
     global resume 
     resume = Button(root, image=resume_btn, bd=0, bg="#fff",
                     state="disabled", command=lambda:rec.resume_recording(stop, resume, pause))
-    resume.place(x=150, y=450)
+    resume.place(x=150, y=150)
 
     stop_btn = PhotoImage(file=os.path.join("Images","stop.png"))
     global stop 
     stop = Button(root, image=stop_btn, bd=0, bg="#fff",
                 state="disabled", command=stop_record)
-    stop.place(x=250, y=450)
+    stop.place(x=250, y=150)
 
     root.protocol('WM_DELETE_WINDOW', gar_collector)
 
-    root.mainloop()
-
     
+
+    root.mainloop()
 
 
 main_thread = Thread(target=main_logic)
 main_thread.start()
+
