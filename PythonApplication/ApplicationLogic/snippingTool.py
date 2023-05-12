@@ -18,6 +18,7 @@ def take_bounded_screenshot(x1, y1, x2, y2, video_num):
     name = os.path.join('Output','Screenshots',filename)
     print(name)
     image.save(name)
+    return name
 
 def send_coords(s_x, s_y, c_x, c_y):
     print("Sending coords")
@@ -29,17 +30,19 @@ def send_coords(s_x, s_y, c_x, c_y):
 
 def calculate_dimension(n):
     global start_x, start_y, current_x, current_y
+    filepath=''
     if start_x <= current_x and start_y <= current_y:
-        take_bounded_screenshot(start_x, start_y, current_x - start_x, current_y - start_y,n)
+        filepath=take_bounded_screenshot(start_x, start_y, current_x - start_x, current_y - start_y,n)
 
     elif start_x >= current_x and start_y <= current_y:
-        take_bounded_screenshot(current_x, start_y, start_x - current_x, current_y - start_y,n)
+        filepath=take_bounded_screenshot(current_x, start_y, start_x - current_x, current_y - start_y,n)
 
     elif start_x <= current_x and start_y >= current_y:
-        take_bounded_screenshot(start_x, current_y, current_x - start_x, start_y - current_y,n)
+        filepath=take_bounded_screenshot(start_x, current_y, current_x - start_x, start_y - current_y,n)
 
     elif start_x >= current_x and start_y >= current_y:
-        take_bounded_screenshot(current_x, current_y, start_x - current_x, start_y - current_y,n)
+        filepath=take_bounded_screenshot(current_x, current_y, start_x - current_x, start_y - current_y,n)
+    return filepath
     
 
 class Application():

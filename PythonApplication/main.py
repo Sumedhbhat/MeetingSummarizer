@@ -26,6 +26,12 @@ import pywinctl as pwc
 from pywinauto import application
 import pygetwindow
 
+os.environ["REPLICATE_API_TOKEN"]="r8_KRiUuszTneQSbmmAaISbUvHeUDYCZrL3bIiJh"
+
+recording_audio=0
+recording_video=0
+
+
 def maximize(window_chosen, options, window_selector,record_audio, record_video, snip_response):
     if window_chosen.get() not in options:
         pass
@@ -76,8 +82,10 @@ def select_window_to_record(record_audio, record_video, snip_response):
 
 
 def check_before_start(record_audio, record_video):
-    global root
+    global root,recording_audio,recording_video
     swtr_res = False
+    recording_video=record_video
+    recording_audio=record_audio
     if record_audio == 0 and record_video == 0:
         pass
     elif record_video == 0 and record_audio == 1:
