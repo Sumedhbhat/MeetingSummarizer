@@ -122,5 +122,6 @@ def main_logic(s_w):
     global snip_window, app
     snip_window = s_w
     app = Application(snip_window)
+    snip_window.focus_force()
     return None
     snip_window.mainloop()

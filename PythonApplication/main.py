@@ -22,18 +22,25 @@ from threading import *
 from fpdf import FPDF
 from datetime import datetime
 from pathlib import Path
+import pywinctl as pwc
+from pywinauto import application
+import pygetwindow
 
-def check_before_start(record_audio, record_video):
-    global root
-    if record_audio == 0 and record_video == 0:
+def maximize(window_chosen, options, window_selector,record_audio, record_video, snip_response):
+    if window_chosen.get() not in options:
         pass
-    elif record_video == 0 and record_audio == 1:
-        record(record_audio, record_video, True)
-    elif record_video == 1:
+    else:
+        global root
+        app_name = window_chosen.get()
+        app = application.Application().connect(title=app_name)
+        main_window = app.top_window()
+        main_window.minimize()
+        main_window.maximize()
+        window_selector.destroy()
 
-        snip_response = messagebox.askyesno("SELECT", "Do you want to record your full screen?")
         if snip_response == False:
-            snip_window = Toplevel(root)
+
+            snip_window = Tk()
             st.main_logic(snip_window)
 
             try:
@@ -42,8 +49,44 @@ def check_before_start(record_audio, record_video):
         
             except:
                 pass
-            
+        
         record(record_audio, record_video, snip_response)
+
+def select_window_to_record(record_audio, record_video, snip_response):
+    global root
+    window_selector = Toplevel(root)
+    window_selector.geometry("350x100")
+    window_selector.title("Select window")
+    window_selector.resizable(False, False)
+
+    allow_label = Label(window_selector, text="Choose which screen or window to record")
+    allow_label.place(x=0,y=0)
+
+    options = list(pwc.getAllTitles())
+
+    window_chosen = StringVar()
+    window_chosen.set("Select window or screen")
+    
+    window_dropdown = OptionMenu(window_selector, window_chosen , *options )
+    window_dropdown.place(x=10,y=30)
+
+    window_button = Button(window_selector, text="OK", command=lambda: maximize(window_chosen, options, window_selector, record_audio, record_video, snip_response))
+    window_button.place(x=300,y=70) 
+
+
+
+def check_before_start(record_audio, record_video):
+    global root
+    swtr_res = False
+    if record_audio == 0 and record_video == 0:
+        pass
+    elif record_video == 0 and record_audio == 1:
+        record(record_audio, record_video, True)
+    elif record_video == 1:
+
+        snip_response = messagebox.askyesno("SELECT", "Do you want to record your full screen?")
+
+        select_window_to_record(record_audio, record_video, snip_response)
 
 def ask_user():
 
@@ -73,6 +116,16 @@ def ask_user():
         record_screen = 0
 
     check_before_start(record_audio, record_screen)
+
+def show_disclaimer():
+    disclaimer_message = "To generate the summary, system audio will be recorded and screenshots of your meeting will be taken frequently. However, once you click the start button, you can select whether to record audio, video or not. All the recorded audio and screenshots are stored locally in your system. Once the summary is generated, JOTE deletes all of these recordings and screenshots."
+
+    response = messagebox.askokcancel("DISCLAIMER", disclaimer_message)
+
+    if response == True:
+        ask_user()
+    else:
+        gar_collector()
 
 def record(record_audio, record_video, snip_response):
     global root
@@ -202,7 +255,7 @@ def main_logic():
     root = Tk()
     root.geometry("400x600")
     root.title("JOTE - Note Summarizer")
-    root.config(bg="#fff")
+    root.config(bg="white")
     root.resizable(False, False)
 
     # icon
@@ -232,7 +285,7 @@ def main_logic():
 
     # Buttons
     global start 
-    start = Button(root, text="Start", font="arial 22", bd=0, command=ask_user)
+    start = Button(root, text="Start", font="arial 22", bd=0, command=show_disclaimer)
     start.place(x=140, y=230)
 
     pause_btn = PhotoImage(file=os.path.join("Images","pause.png"))
@@ -255,9 +308,7 @@ def main_logic():
 
     root.protocol('WM_DELETE_WINDOW', gar_collector)
 
-    disclaimer_message = "To generate the summary, system audio will be recorded and screenshots of your meeting will be taken frequently. However, once you click the start button, you can select whether to record audio, video or not. All the recorded audio and screenshots are stored locally in your system. Once the summary is generated, JOTE deletes all of these recordings and screenshots."
-
-    messagebox.showwarning("DISCLAIMER", disclaimer_message)
+    
 
     root.mainloop()
 
