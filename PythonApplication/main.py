@@ -92,7 +92,7 @@ def ask_user():
 
     start["state"] = DISABLED
     start["text"] = "Started"
-    start["width"] = 5
+    start["width"] = 6
 
     record_screen = IntVar()
     record_audio = IntVar()
@@ -128,11 +128,12 @@ def show_disclaimer():
         gar_collector()
 
 def record(record_audio, record_video, snip_response):
-    global root
+    global root, start
     # Start button
     start["state"] = DISABLED
     start["text"] = "Started"
-    start["width"] = 5
+    start["width"] = 6
+    start.place(x=140,y=70)
 
     # Pause, resume and stop button
     pause["state"] = "normal"
@@ -156,7 +157,9 @@ def stop_record():
 
     # Disable states
     start["state"] = DISABLED
-    start["text"] = "Start"
+    start["text"] = "Processing"
+    start.place(x=120,y=70)
+    start["width"] = 9
     stop["state"] = DISABLED
     pause["state"] = DISABLED
     resume["state"] = DISABLED
@@ -239,9 +242,12 @@ def progress_bar():
         loc = write_to_file(rtnValue)
         os.startfile(loc)
         messagebox.showinfo("SUCCESS", "Summary has been generated. \nLocation - "+loc)
-    start["state"] = "normal"
 
     rec.delete_dir()
+    start["state"] = "normal"
+    start["text"] = "Start"
+    start.place(x=150, y=70)
+    start["width"] = 5
     
 def gar_collector():
     root = None
@@ -253,7 +259,7 @@ def main_logic():
     # Basic
     global root
     root = Tk()
-    root.geometry("400x600")
+    root.geometry("400x250")
     root.title("JOTE - Note Summarizer")
     root.config(bg="white")
     root.resizable(False, False)
@@ -263,19 +269,19 @@ def main_logic():
     root.iconphoto(False, photo)
 
     # background image
-    bg_image_yellow = PhotoImage(file=os.path.join("Images","yellow.png"))
-    Label(root, image=bg_image_yellow, bg="#fff").place(x=-2, y=35)
+    #bg_image_yellow = PhotoImage(file=os.path.join("Images","yellow.png"))
+    #Label(root, image=bg_image_yellow, bg="#fff").place(x=-2, y=35)
 
-    bg_image_blue = PhotoImage(file=os.path.join("Images","blue.png"))
-    Label(root, image=bg_image_blue, bg="#fff").place(x=223, y=200)
+    #bg_image_blue = PhotoImage(file=os.path.join("Images","blue.png"))
+    #Label(root, image=bg_image_blue, bg="#fff").place(x=223, y=200)
 
     # Heading
     hd = Label(root, text="JOTE - Note Summarizer",
             bg="#fff", font="arial 15 bold")
     hd.pack(pady=10)
 
-    name_img = PhotoImage(file=os.path.join("Images","recording.png"))
-    Label(root, image=name_img, bd=0).pack(pady=30)
+    #name_img = PhotoImage(file=os.path.join("Images","recording.png"))
+    #Label(root, image=name_img, bd=0).pack(pady=30)
 
     # Entry
     #entry = Entry(root, textvariable=file_name, width=18, font="arial 15")
@@ -286,25 +292,25 @@ def main_logic():
     # Buttons
     global start 
     start = Button(root, text="Start", font="arial 22", bd=0, command=show_disclaimer)
-    start.place(x=140, y=230)
+    start.place(x=150, y=70)
 
     pause_btn = PhotoImage(file=os.path.join("Images","pause.png"))
     global pause 
     pause = Button(root, image=pause_btn, bd=0, bg="#fff",
                 state="disabled", command=lambda : rec.pause_recording(stop, resume, pause))
-    pause.place(x=50, y=450)
+    pause.place(x=50, y=150)
 
     resume_btn = PhotoImage(file=os.path.join("Images","resume.png"))
     global resume 
     resume = Button(root, image=resume_btn, bd=0, bg="#fff",
                     state="disabled", command=lambda:rec.resume_recording(stop, resume, pause))
-    resume.place(x=150, y=450)
+    resume.place(x=150, y=150)
 
     stop_btn = PhotoImage(file=os.path.join("Images","stop.png"))
     global stop 
     stop = Button(root, image=stop_btn, bd=0, bg="#fff",
                 state="disabled", command=stop_record)
-    stop.place(x=250, y=450)
+    stop.place(x=250, y=150)
 
     root.protocol('WM_DELETE_WINDOW', gar_collector)
 
