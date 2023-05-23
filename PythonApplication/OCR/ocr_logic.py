@@ -16,6 +16,7 @@ def image_to_text(fileLocation):
     text = pytesseract.image_to_string(
         PIL.Image.open(fileLocation), config=myconfig)
     text.replace("\n"," ")
+    text="".join(text.splitlines())
     ''' 
     " ".join(w for w in nltk.wordpunct_tokenize(text) \
          if w.lower() in words or not w.isalpha())
