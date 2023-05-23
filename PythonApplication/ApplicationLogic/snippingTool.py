@@ -57,6 +57,8 @@ class Application():
         snip_window.title('Snipping Tool')
         snip_window.geometry('200x150')
         snip_window.resizable(False, False)
+        snip_window.lift()
+        snip_window.attributes("-topmost", True)
 
         self.menu_frame = Frame(master)
         self.menu_frame.pack(fill=BOTH, expand=YES, padx=1, pady=1)
