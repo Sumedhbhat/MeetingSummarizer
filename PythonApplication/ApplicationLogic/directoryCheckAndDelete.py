@@ -33,4 +33,4 @@ def delete_dir():
     output_exist = os.path.exists(os.path.join(curr_dir , "Output"))
 
     if output_exist == True:
-        shutil.rmtree(os.path.join(curr_dir , "Output"))
+        shutil.rmtree(os.path.join(curr_dir , "Output"), ignore_errors=True)

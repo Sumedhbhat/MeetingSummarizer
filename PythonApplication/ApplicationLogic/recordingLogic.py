@@ -10,6 +10,8 @@ from threading import *
 from tkinter import *
 import ocr_logic as ocr
 import image_compare
+import threading
+from datetime import datetime, timedelta
 
 record = True
 r_a = 0
@@ -20,10 +22,11 @@ snip_response = True
 similarity_values=[]
 image_data=[]
 files_processed = 0
-    
+cur_time = 0
+
 def init_recording(record_audio, record_video, s_r):
 
-    global r_a, r_v, audio_num, video_num, record, snip_response
+    global r_a, r_v, audio_num, video_num, record, snip_response, cur_time
     record = True
     r_a = record_audio
     r_v = record_video
@@ -36,7 +39,8 @@ def init_recording(record_audio, record_video, s_r):
         record_video_thread.start()
 
     if record_audio == 1:
-        record_audio_thread = Thread(target=record_speech)
+        cur_time = datetime.now()
+        record_audio_thread = threading.Thread(target=record_speech)
         record_audio_thread.start()
 
 def start_recording():
@@ -99,10 +103,12 @@ def stop_recording():
 
 def record_speech():
 
-    global record, audio_num
+    global record, audio_num, cur_time
     while record == True:
-        s.rec(audio_num)
-        audio_num += 1
+        res = s.rec(audio_num, cur_time)
+        if res != -1:
+            audio_num += 1
+            cur_time += timedelta(seconds=10)
 
 
 def delete_dir():
