@@ -9,8 +9,7 @@ from tkinter import messagebox
 import recordingLogic as rl
 from recordingLogic import files_processed,similarity_values,image_data
 from speech import audio_data
-from main import recording_audio, recording_video
-
+import main
 import speech_to_text_converter as srj
 import image_compare
 import generateSummary as gs
@@ -49,20 +48,21 @@ def progress_bar_logic(progress, p_bar, percent):
 
     while True:
         update_progress_bar(p_bar,percent,total_files+1)
-        print(rl.files_processed,total_files)
+        total_files=len(os.listdir(audio_directory))+len(os.listdir(image_directory))
         if rl.files_processed>=total_files:
             print("---------------------------------------Broke free of the loop------------------------------------------------------")
             break
     last_index=0
+    print("recording audio variable name",main.recording_audio)
     for index,value in enumerate(similarity_values):
-        if recording_audio==True:
+        if main.recording_audio==True and index<len(audio_data):
             speechData[last_index]+=audio_data[index]
         if value==1:
             data.append(image_data[index])
             last_index+=1
-            if recording_audio==True:
+            if main.recording_audio==True:
                 speechData.append('')
-    if len(similarity_values)<len(audio_data) and recording_audio==True:
+    if len(similarity_values)<len(audio_data) and main.recording_audio==True:
         audio_index=len(similarity_values)
         while audio_index!=len(similarity_values):
             speechData[len(speechData)-1]+=audio_data[audio_index]
