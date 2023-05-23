@@ -25,6 +25,7 @@ from pathlib import Path
 import pywinctl as pwc
 from pywinauto import application
 import pygetwindow
+import generateSummary as gs
 
 os.environ["REPLICATE_API_TOKEN"]="r8_KRiUuszTneQSbmmAaISbUvHeUDYCZrL3bIiJh"
 
@@ -200,7 +201,8 @@ def write_to_file(rtnValue):
 
         pdf.set_font('Arial', 'BU', 16)
         pdf.cell(60)
-        pdf.cell(60, 10, 'SUMMARY OF THE MEETING', 0, 1, 'C')
+        summary_title=gs.generate_title(rtnValue)
+        pdf.cell(60, 10, summary_title, 0, 1, 'C')
         pdf.cell(0, 3, "\n", 0, 1, 'L')
 
         rtnValue = rtnValue.encode('latin-1', 'replace').decode('latin-1')
