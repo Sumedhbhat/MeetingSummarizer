@@ -275,7 +275,6 @@ def main_logic():
     # icon
     photo = PhotoImage(file="Images/recording.png")
     root.iconphoto(False, photo)
-
     # background image
     #bg_image_yellow = PhotoImage(file=os.path.join("Images","yellow.png"))
     #Label(root, image=bg_image_yellow, bg="#fff").place(x=-2, y=35)
@@ -319,7 +318,7 @@ def main_logic():
     stop = Button(root, image=stop_btn, bd=0, bg="#fff",
                 state="disabled", command=stop_record)
     stop.place(x=250, y=150)
-
+    
     root.protocol('WM_DELETE_WINDOW', gar_collector)
 
     
@@ -329,4 +328,3 @@ def main_logic():
 
 main_thread = Thread(target=main_logic)
 main_thread.start()
-
