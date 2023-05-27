@@ -27,7 +27,7 @@ from pywinauto import application
 import pygetwindow
 import generateSummary as gs
 
-os.environ["REPLICATE_API_TOKEN"]="r8_KRiUuszTneQSbmmAaISbUvHeUDYCZrL3bIiJh"
+os.environ["REPLICATE_API_TOKEN"]="r8_CYLHuIBkE1qavqpXnqwCzIfQsN81qxs1yriWz"
 
 recording_audio=0
 recording_video=0
