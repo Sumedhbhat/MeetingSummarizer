@@ -10,7 +10,7 @@ importlib-metadata==5.1.0
 more-itertools==9.0.0
 numpy==1.21.6
 packaging==21.3
-Pillow==9.3.0
+Pillow==13.0.0
 pydub==0.25.1
 pyparsing==3.0.9
 pytesseract==0.3.10
