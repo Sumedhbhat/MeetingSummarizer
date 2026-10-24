@@ -1,4 +1,4 @@
-certifi==2022.9.24
+certifi==2026.10.19
 charset-normalizer==2.1.1
 colorama==0.4.6
 ffmpeg-python==0.2.0
