@@ -27,7 +27,7 @@ torch==1.13.0
 tqdm==4.64.1
 transformers==4.24.0
 typing_extensions==4.4.0
-urllib3==1.26.12
+urllib3==2.8.0
 whisper @ git+https://github.com/openai/whisper.git@02aa851a4910201f0db56960064d7e121a01002c
 wincertstore==0.2
 zipp==3.10.0
