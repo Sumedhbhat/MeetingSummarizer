@@ -22,7 +22,7 @@ tk==0.1.0
 tokenizers==0.13.2
 torch==1.13.0
 tqdm==4.64.1
-transformers==4.24.0
+transformers==5.10.1
 typing_extensions==4.4.0
 urllib3==2.8.0
 zipp==3.11.0
