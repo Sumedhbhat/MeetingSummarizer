@@ -1,11 +1,12 @@
-from transformers import pipeline, BartTokenizerFast, EncoderDecoderModel
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, BartTokenizerFast, EncoderDecoderModel
 import torch
 from nltk import tokenize
+import os
 import openai
 
-# Insert your OpenAI API Key here
+# Set the OPENAI_API_KEY environment variable before running the app
 
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 openai.api_key = OPENAI_API_KEY
 
 # Function to split the paragraph into sentences
@@ -32,12 +33,15 @@ def merge_text(text_1, text_2):
 # Function to generate the summary of the text
 
 
-def generate_summary_pipeline(text):
-    summarizer = pipeline("summarization", model="knkarthick/MEETING_SUMMARY")
-    summary = summarizer(text, max_length=500, min_length=200, do_sample=False)
-    # print(summary[0]['summary_text'])
+def generate_summary_pipeline(text, model_name="knkarthick/MEETING_SUMMARY"):
+    # transformers 5 removed the "summarization" pipeline, so call the model directly
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+    inputs = tokenizer(text, return_tensors="pt", truncation=True)
+    output_ids = model.generate(**inputs, max_length=500, min_length=200, do_sample=False)
+    # print(tokenizer.decode(output_ids[0], skip_special_tokens=True))
 
-    return summary[0]['summary_text']
+    return tokenizer.decode(output_ids[0], skip_special_tokens=True)
 
 
 def generate_summary_generative(text):
