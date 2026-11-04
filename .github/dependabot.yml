@@ -1,0 +1,20 @@
+# Security updates remain ungrouped and bypass the version-update cooldown.
+# Other releases wait 14 days after publication.
+version: 2
+updates:
+- package-ecosystem: pip
+  directories:
+  - /PythonApplication
+  - /PythonApplication/ApplicationLogic
+  - /PythonApplication/SpeechToTextConverter
+  - /PythonApplication/Summarizer
+  schedule:
+    interval: daily
+  cooldown:
+    default-days: 14
+  groups:
+    minor-and-patch:
+      applies-to: version-updates
+      update-types:
+      - minor
+      - patch
